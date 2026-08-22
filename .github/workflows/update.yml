@@ -1,0 +1,35 @@
+name: Taiwan market daily dashboard
+on:
+  schedule:
+    - cron: '30 6 * * 1-5'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Update market data with retry
+        shell: bash
+        run: |
+          set -e
+          for i in 1 2 3 4 5 6; do
+            echo "Attempt $i/6"
+            set +e
+            python3 update.py
+            code=$?
+            set -e
+            if [ "$code" = "0" ]; then exit 0; fi
+            if [ "$code" = "2" ]; then sleep 300; else sleep 120; fi
+          done
+          exit 1
+      - name: Commit generated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/latest.json docs/data/history.json
+          if git diff --cached --quiet; then echo "No changes to commit."; else git commit -m "chore: update Taiwan market dashboard" && git push; fi
