@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Build a Taiwan stock market snapshot from official TWSE OpenAPI data."""
+"""Build a Taiwan stock + ETF market snapshot from official TWSE OpenAPI data."""
 from __future__ import annotations
 import json, os, re, sys, time
 from datetime import datetime, timedelta, timezone
@@ -9,7 +9,7 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 ROOT=Path(__file__).resolve().parent; DOCS=ROOT/'docs'; DATA_DIR=DOCS/'data'; HISTORY_PATH=DATA_DIR/'history.json'; LATEST_PATH=DATA_DIR/'latest.json'
 BASE='https://openapi.twse.com.tw/v1'
-ENDPOINTS={'index':f'{BASE}/exchangeReport/MI_INDEX','stocks':f'{BASE}/exchangeReport/STOCK_DAY_ALL','margin':f'{BASE}/exchangeReport/MI_MARGN','news':f'{BASE}/news/newsList'}
+ENDPOINTS={'index':f'{BASE}/exchangeReport/MI_INDEX','stocks':f'{BASE}/exchangeReport/STOCK_DAY_ALL','margin':f'{BASE}/exchangeReport/MI_MARGN','news':f'{BASE}/news/newsList','funds':f'{BASE}/opendata/t187ap47_L'}
 WATCHLIST=['0050','2330','2317','2454','2308','2382']; TAIPEI=timezone(timedelta(hours=8))
 def get_json(url, attempts=3, timeout=30):
     last=None
@@ -40,6 +40,10 @@ def first_num(d,*keys):
             n=num(d[k])
             if n is not None:return n
     return None
+def first_text(d,*keys):
+    for k in keys:
+        if k in d and str(d[k]).strip():return str(d[k]).strip()
+    return ''
 def roc_to_iso(v):
     s=re.sub(r'\D','',str(v or ''))
     if len(s)!=7:return None
@@ -54,10 +58,36 @@ def parse_index(payload):
 def parse_stocks(payload):
     out=[]
     for r in records(payload):
-        code=str(r.get('證券代號') or r.get('Code') or '').strip(); name=str(r.get('證券名稱') or r.get('Name') or '').strip(); close=first_num(r,'收盤價','Close'); change=first_num(r,'漲跌價','漲跌','Change'); volume=first_num(r,'成交股數','成交量','Volume'); value=first_num(r,'成交金額','Turnover','Value')
+        code=first_text(r,'證券代號','Code'); name=first_text(r,'證券名稱','Name'); close=first_num(r,'收盤價','Close'); change=first_num(r,'漲跌價','漲跌','Change'); volume=first_num(r,'成交股數','成交量','Volume'); value=first_num(r,'成交金額','Turnover','Value')
         if not code or not name or close is None or change is None:continue
         prev=close-change; pct=change/prev*100 if prev else 0
         out.append({'code':code,'name':name,'close':close,'change':change,'pct':pct,'volume':volume or 0,'value':value or 0})
+    return out
+def parse_etf_master(payload):
+    """Identify listed ETFs from TWSE's official fund master data.
+    The endpoint's field names can evolve, so classification is deliberately flexible.
+    """
+    out=[]
+    for r in records(payload):
+        code=first_text(r,'證券代號','基金代號','代號','Code'); name=first_text(r,'基金名稱','基金簡稱','證券名稱','名稱','中文名稱','Name')
+        blob=json.dumps(r,ensure_ascii=False).upper()
+        is_etf=('ETF' in blob or '槓反ETF' in blob or '指數股票型' in blob)
+        if not is_etf or not code:continue
+        out.append({'code':code,'name':name or code,'master':r})
+    # de-duplicate by code
+    return list({x['code']:x for x in out}.values())
+def build_etfs(master_payload, stocks):
+    by_code={s['code']:s for s in stocks}; master=parse_etf_master(master_payload); out=[]
+    for e in master:
+        s=by_code.get(e['code'])
+        if not s:continue
+        m=e['master']; text=json.dumps(m,ensure_ascii=False)
+        name=e['name'] or s['name']
+        # Official ETF master + trading data; classification is only for dashboard grouping.
+        positive2=(s['code'].endswith('L') and not any(x in (name+text) for x in ['反1','反向1','反向','反1倍'])) or bool(re.search(r'正\s*2|正向\s*2|兩倍|2倍槓桿|槓桿',name+text))
+        inverse=('反1' in name or '反向' in name or s['code'].endswith('R'))
+        item={**s,'name':name,'is_positive2':bool(positive2 and not inverse),'is_inverse':inverse}
+        out.append(item)
     return out
 def parse_margin(payload):
     for r in records(payload):
@@ -67,7 +97,7 @@ def parse_margin(payload):
 def parse_news(payload):
     out=[]
     for r in records(payload):
-        title=str(r.get('title') or r.get('標題') or r.get('新聞標題') or '').strip(); link=str(r.get('link') or r.get('url') or r.get('連結') or '').strip(); date=str(r.get('date') or r.get('日期') or r.get('發佈時間') or '').strip()
+        title=first_text(r,'title','標題','新聞標題'); link=first_text(r,'link','url','連結'); date=first_text(r,'date','日期','發佈時間')
         if title:out.append({'title':title,'link':link,'date':date})
     return out[:12]
 def load_history():
@@ -98,7 +128,10 @@ def main():
     if index['date']!=target:print(f"Market data not ready. Target={target}, TWSE={index['date']}");return 2
     stocks=parse_stocks(get_json(ENDPOINTS['stocks']))
     if len(stocks)<100:print(f'Stock data incomplete: {len(stocks)}');return 2
-    market=market_summary(stocks); gainers=sorted(stocks,key=lambda s:s['pct'],reverse=True)[:10]; losers=sorted(stocks,key=lambda s:s['pct'])[:10]; active=sorted(stocks,key=lambda s:s['value'],reverse=True)[:10]; watch=[s for s in stocks if s['code'] in WATCHLIST]
+    market=market_summary(stocks); gainers=sorted(stocks,key=lambda s:s['pct'],reverse=True)[:10]; losers=sorted(stocks,key=lambda s:s['pct'])[:10]; active=sorted(stocks,key=lambda s:s['value'],reverse=True)[:10]; watch=[s for s in stocks if s['code'] in WATCHLIST]; volume_top=sorted(stocks,key=lambda s:s['volume'],reverse=True)[:15]
+    try:etfs=build_etfs(get_json(ENDPOINTS['funds']),stocks)
+    except Exception as e:print(f'ETF master unavailable: {e}');etfs=[]
+    etf_active=sorted(etfs,key=lambda s:s['value'],reverse=True)[:10]; etf_gainers=sorted(etfs,key=lambda s:s['pct'],reverse=True)[:10]; etf_losers=sorted(etfs,key=lambda s:s['pct'])[:10]; positive2=[s for s in etfs if s['is_positive2']]; positive2_rank=sorted(positive2,key=lambda s:s['pct'],reverse=True); positive2_active=sorted(positive2,key=lambda s:s['value'],reverse=True)[:10]
     sectors=[]
     for r in records(get_json(ENDPOINTS['index'])):
         name=str(r.get('指數','')); pct=first_num(r,'漲跌百分比'); close=first_num(r,'收盤指數')
@@ -108,6 +141,5 @@ def main():
     except Exception as e:print(f'News unavailable: {e}');news=[]
     try:margin=parse_margin(get_json(ENDPOINTS['margin']))
     except Exception as e:print(f'Margin unavailable: {e}');margin={}
-    volume_top=sorted(stocks,key=lambda s:s['volume'],reverse=True)[:15]
-    payload={'generated_at':now.isoformat(),'trade_date':target,'source':'TWSE OpenAPI','market':{**market,'turnover_billion':market['turnover']/1e8,'index':index},'trend':trend,'watchlist':watch,'gainers':gainers,'losers':losers,'active':active,'stocks':volume_top,'sectors_up':sorted(sectors,key=lambda x:x['pct'],reverse=True)[:8],'sectors_down':sorted(sectors,key=lambda x:x['pct'])[:8],'margin':margin,'news':news,'notes':['趨勢思考為規則式市場統計，不是買賣訊號，也不是投資建議。','目前資料範圍為 TWSE 上市市場；後續可加入 TPEX 上櫃、三大法人、財報與新聞情緒。']}; DATA_DIR.mkdir(parents=True,exist_ok=True); LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8'); print(f"Updated {target}: {len(stocks)} stocks, trend={trend['label']}({trend['score']})"); return 0
+    payload={'generated_at':now.isoformat(),'trade_date':target,'source':'TWSE OpenAPI','market':{**market,'turnover_billion':market['turnover']/1e8,'index':index},'trend':trend,'watchlist':watch,'gainers':gainers,'losers':losers,'active':active,'stocks':volume_top,'etf_count':len(etfs),'etf_active':etf_active,'etf_gainers':etf_gainers,'etf_losers':etf_losers,'positive2_count':len(positive2),'positive2_rank':positive2_rank,'positive2_active':positive2_active,'sectors_up':sorted(sectors,key=lambda x:x['pct'],reverse=True)[:8],'sectors_down':sorted(sectors,key=lambda x:x['pct'])[:8],'margin':margin,'news':news,'notes':['ETF 排行使用 TWSE 官方基金基本資料與上市日成交資料交叉整理。','正2排行以槓桿型 ETF 中的單日正向兩倍商品分類；槓桿／反向 ETF 是以單日報酬目標設計，長期累積報酬不等於指數累積報酬的簡單兩倍。','趨勢思考為規則式市場統計，不是買賣訊號，也不是投資建議。']}; DATA_DIR.mkdir(parents=True,exist_ok=True); LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8'); print(f"Updated {target}: {len(stocks)} securities, {len(etfs)} ETFs, {len(positive2)} positive-2 ETFs, trend={trend['label']}({trend['score']})"); return 0
 if __name__=='__main__':sys.exit(main())
