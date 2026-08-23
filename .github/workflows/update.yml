@@ -3,6 +3,12 @@ on:
   schedule:
     - cron: '30 6 * * 1-5'
   workflow_dispatch:
+    inputs:
+      force:
+        description: '強制執行（忽略非交易日檢查，用於手動測試）'
+        required: false
+        default: false
+        type: boolean
   push:
     paths:
       - 'backfill_20260821.py'
@@ -22,6 +28,8 @@ jobs:
       - name: Update market data with retry
         if: github.event_name != 'push'
         shell: bash
+        env:
+          FORCE_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '1' || '' }}
         run: |
           set -e
           for i in 1 2 3 4 5 6; do
@@ -38,5 +46,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/data/latest.json docs/data/history.json docs/data/2026-08-21.json
-          if git diff --cached --quiet; then echo "No changes to commit."; else git commit -m "chore: backfill Taiwan market 2026-08-21" && git push; fi
+          git add docs/data/latest.json docs/data/history.json docs/data/*.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            DATE=$(python3 -c "import json;print(json.load(open('docs/data/latest.json')).get('trade_date','unknown'))" 2>/dev/null || echo "unknown")
+            git commit -m "chore: update Taiwan market data ($DATE)"
+            git push
+          fi
