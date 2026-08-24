@@ -11,7 +11,8 @@ on:
         type: boolean
   push:
     paths:
-      - 'backfill_20260821.py'
+      - 'update.py'
+      - '.github/workflows/update.yml'
 permissions:
   contents: write
 jobs:
@@ -22,24 +23,26 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Historical backfill 2026-08-21
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: python3 backfill_20260821.py
       - name: Update market data with retry
-        if: github.event_name != 'push'
         shell: bash
         env:
           FORCE_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '1' || '' }}
         run: |
           set -e
-          for i in 1 2 3 4 5 6; do
-            echo "Attempt $i/6"
+          for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            echo "Attempt $i/12"
             set +e
             python3 update.py
             code=$?
             set -e
             if [ "$code" = "0" ]; then exit 0; fi
-            if [ "$code" = "2" ]; then sleep 300; else sleep 120; fi
+            if [ "$code" = "2" ]; then
+              echo "Market data is not ready yet; waiting 5 minutes before retry."
+              sleep 300
+            else
+              echo "Update failed with code $code; waiting 2 minutes before retry."
+              sleep 120
+            fi
           done
           exit 1
       - name: Commit generated data
