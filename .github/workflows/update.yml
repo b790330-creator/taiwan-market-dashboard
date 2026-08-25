@@ -2,6 +2,7 @@ name: Taiwan market daily dashboard
 on:
   schedule:
     - cron: '30 6 * * 1-5'
+    - cron: '30 23 * * 0-4'
   workflow_dispatch:
     inputs:
       force:
@@ -29,20 +30,15 @@ jobs:
           FORCE_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '1' || '' }}
         run: |
           set -e
-          for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
-            echo "Attempt $i/12"
+          for i in 1 2 3; do
+            echo "Attempt $i/3"
             set +e
             python3 update.py
             code=$?
             set -e
             if [ "$code" = "0" ]; then exit 0; fi
-            if [ "$code" = "2" ]; then
-              echo "Market data is not ready yet; waiting 5 minutes before retry."
-              sleep 300
-            else
-              echo "Update failed with code $code; waiting 2 minutes before retry."
-              sleep 120
-            fi
+            echo "Update returned code $code; waiting 3 minutes before retry."
+            sleep 180
           done
           exit 1
       - name: Commit generated data
