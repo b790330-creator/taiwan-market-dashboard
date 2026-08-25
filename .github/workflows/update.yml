@@ -1,21 +1,17 @@
 name: Taiwan market daily dashboard
+
 on:
   schedule:
-    # 14:30 Taiwan time (UTC+8) on weekdays.
     - cron: '30 6 * * 1-5'
   workflow_dispatch:
-    inputs:
-      force:
-        description: '強制執行（忽略非交易日檢查，用於手動測試）'
-        required: false
-        default: false
-        type: boolean
   push:
     paths:
       - 'update.py'
       - '.github/workflows/update.yml'
+
 permissions:
   contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -24,14 +20,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Update market data with retry
         shell: bash
-        env:
-          FORCE_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '1' || '' }}
         run: |
           set -u
-          # Keep retrying from 14:30 through roughly 16:00 Taiwan time.
-          # The TWSE endpoint can publish the final close later than the trigger time.
           for i in $(seq 1 19); do
             echo "Attempt $i/19"
             set +e
@@ -39,19 +32,18 @@ jobs:
             code=$?
             set -e
 
-            # update.py can legitimately return 0 while the endpoint is still
-            # serving the previous trading day. Treat that as NOT READY.
             today=$(TZ=Asia/Taipei date +%F)
             saved=$(python3 - <<'PY'
 import json
 from pathlib import Path
-p=Path('docs/data/latest.json')
+p = Path('docs/data/latest.json')
 try:
-    print(json.loads(p.read_text(encoding='utf-8')).get('trade_date',''))
+    print(json.loads(p.read_text(encoding='utf-8')).get('trade_date', ''))
 except Exception:
     print('')
 PY
 )
+
             echo "Target=$today, saved=$saved, update_exit=$code"
 
             if [ "$code" = "0" ] && [ "$saved" = "$today" ]; then
@@ -60,12 +52,14 @@ PY
             fi
 
             if [ "$i" -lt 19 ]; then
-              echo "Market data not ready/current yet. Waiting 5 minutes before retry."
+              echo "Market data not ready/current. Waiting 5 minutes."
               sleep 300
             fi
           done
-          echo "Market data was not updated to today's date after 19 attempts."
+
+          echo "ERROR: market data did not reach today's date after 19 attempts."
           exit 1
+
       - name: Commit generated data
         run: |
           git config user.name "github-actions[bot]"
@@ -74,7 +68,7 @@ PY
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            DATE=$(python3 -c "import json;print(json.load(open('docs/data/latest.json')).get('trade_date','unknown'))" 2>/dev/null || echo "unknown")
+            DATE=$(python3 -c "import json; print(json.load(open('docs/data/latest.json')).get('trade_date','unknown'))" 2>/dev/null || echo "unknown")
             git commit -m "chore: update Taiwan market data ($DATE)"
             git push
           fi
