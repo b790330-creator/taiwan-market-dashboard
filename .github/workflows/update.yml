@@ -1,8 +1,8 @@
 name: Taiwan market daily dashboard
 on:
   schedule:
+    # 14:30 Taiwan time (UTC+8) on weekdays.
     - cron: '30 6 * * 1-5'
-    - cron: '30 23 * * 0-4'
   workflow_dispatch:
     inputs:
       force:
@@ -29,17 +29,42 @@ jobs:
         env:
           FORCE_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '1' || '' }}
         run: |
-          set -e
-          for i in 1 2 3; do
-            echo "Attempt $i/3"
+          set -u
+          # Keep retrying from 14:30 through roughly 16:00 Taiwan time.
+          # The TWSE endpoint can publish the final close later than the trigger time.
+          for i in $(seq 1 19); do
+            echo "Attempt $i/19"
             set +e
             python3 update.py
             code=$?
             set -e
-            if [ "$code" = "0" ]; then exit 0; fi
-            echo "Update returned code $code; waiting 3 minutes before retry."
-            sleep 180
+
+            # update.py can legitimately return 0 while the endpoint is still
+            # serving the previous trading day. Treat that as NOT READY.
+            today=$(TZ=Asia/Taipei date +%F)
+            saved=$(python3 - <<'PY'
+import json
+from pathlib import Path
+p=Path('docs/data/latest.json')
+try:
+    print(json.loads(p.read_text(encoding='utf-8')).get('trade_date',''))
+except Exception:
+    print('')
+PY
+)
+            echo "Target=$today, saved=$saved, update_exit=$code"
+
+            if [ "$code" = "0" ] && [ "$saved" = "$today" ]; then
+              echo "Market data is current: $saved"
+              exit 0
+            fi
+
+            if [ "$i" -lt 19 ]; then
+              echo "Market data not ready/current yet. Waiting 5 minutes before retry."
+              sleep 300
+            fi
           done
+          echo "Market data was not updated to today's date after 19 attempts."
           exit 1
       - name: Commit generated data
         run: |
