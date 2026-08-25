@@ -148,13 +148,23 @@ def trend_analysis(index,market,history):
         ret20=(index['close']/recent[0]['index']-1)*100 if recent[0]['index'] else 0; score += 10 if ret20>3 else 5 if ret20>0 else -5 if ret20<-3 else 0; reasons.append(f'近20個交易日指數變動 {ret20:+.2f}%')
     score=max(0,min(100,int(round(score)))); label='偏多' if score>=65 else '稍偏多' if score>=55 else '中性' if score>=45 else '稍偏空' if score>=35 else '偏空'; return {'score':score,'label':label,'reasons':reasons,'history_days':len(hist),'ret5':ret5,'ret20':ret20}
 
+def load_latest_trade_date():
+    if not LATEST_PATH.exists():return None
+    try:return json.loads(LATEST_PATH.read_text(encoding='utf-8')).get('trade_date')
+    except Exception:return None
+
 def main():
-    now=datetime.now(TAIPEI); target=now.date().isoformat()
-    if now.weekday()>=5 and os.getenv('FORCE_RUN')!='1':print(f'Weekend: {target}');return 0
+    now=datetime.now(TAIPEI); today=now.date().isoformat()
+    if now.weekday()>=5 and os.getenv('FORCE_RUN')!='1':print(f'Weekend: {today}');return 0
     index=parse_index(get_json(ENDPOINTS['index'], attempts=4))
-    if index['date']!=target:
-        print(f"Market data not ready. Target={target}, TWSE={index['date']}")
+    last_saved=load_latest_trade_date()
+    if index['date']==last_saved:
+        print(f"No new data yet. TWSE latest={index['date']} is already saved.")
+        return 0
+    if index['date']>today:
+        print(f"Unexpected future date from TWSE: {index['date']} > today {today}")
         return 2
+    target=index['date']
     stocks=parse_stocks(get_json(ENDPOINTS['stocks'], attempts=4))
     if len(stocks)<100:print(f'Stock data incomplete: {len(stocks)}');return 2
     market=market_summary(stocks); gainers=sorted(stocks,key=lambda s:s['pct'],reverse=True)[:10]; losers=sorted(stocks,key=lambda s:s['pct'])[:10]; active=sorted(stocks,key=lambda s:s['value'],reverse=True)[:10]; watch=[s for s in stocks if s['code'] in WATCHLIST]; volume_top=sorted(stocks,key=lambda s:s['volume'],reverse=True)[:15]
