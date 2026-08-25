@@ -1,13 +1,15 @@
 name: Taiwan market daily dashboard
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - update.py
+      - .github/workflows/update.yml
   schedule:
     - cron: '30 6 * * 1-5'
   workflow_dispatch:
-  push:
-    paths:
-      - 'update.py'
-      - '.github/workflows/update.yml'
 
 permissions:
   contents: write
@@ -18,57 +20,43 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Update market data with retry
+      - name: Update market data
         shell: bash
         run: |
-          set -u
+          set -e
           for i in $(seq 1 19); do
             echo "Attempt $i/19"
             set +e
             python3 update.py
             code=$?
             set -e
-
             today=$(TZ=Asia/Taipei date +%F)
-            saved=$(python3 - <<'PY'
-import json
-from pathlib import Path
-p = Path('docs/data/latest.json')
-try:
-    print(json.loads(p.read_text(encoding='utf-8')).get('trade_date', ''))
-except Exception:
-    print('')
-PY
-)
-
-            echo "Target=$today, saved=$saved, update_exit=$code"
-
-            if [ "$code" = "0" ] && [ "$saved" = "$today" ]; then
-              echo "Market data is current: $saved"
+            saved=$(python3 -c "import json; print(json.load(open('docs/data/latest.json')).get('trade_date',''))" 2>/dev/null || true)
+            echo "Target=$today Saved=$saved Exit=$code"
+            if [ "$code" -eq 0 ] && [ "$saved" = "$today" ]; then
+              echo "SUCCESS: market data is current for $today"
               exit 0
             fi
-
             if [ "$i" -lt 19 ]; then
-              echo "Market data not ready/current. Waiting 5 minutes."
+              echo "NOT READY: waiting 5 minutes"
               sleep 300
             fi
           done
-
-          echo "ERROR: market data did not reach today's date after 19 attempts."
+          echo "FAILED: today's market data was not published"
           exit 1
 
       - name: Commit generated data
+        shell: bash
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/data/latest.json docs/data/history.json docs/data/*.json
           if git diff --cached --quiet; then
-            echo "No changes to commit."
+            echo "No changes to commit"
           else
-            DATE=$(python3 -c "import json; print(json.load(open('docs/data/latest.json')).get('trade_date','unknown'))" 2>/dev/null || echo "unknown")
+            DATE=$(python3 -c "import json; print(json.load(open('docs/data/latest.json')).get('trade_date','unknown'))")
             git commit -m "chore: update Taiwan market data ($DATE)"
             git push
           fi
