@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 """Build a Taiwan stock + ETF market snapshot from official TWSE OpenAPI data."""
 from __future__ import annotations
-import json, os, re, sys, time
+import csv, io, json, os, re, sys, time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 from urllib.request import Request, urlopen
 
-ROOT=Path(__file__).resolve().parent; DOCS=ROOT/'docs'; DATA_DIR=DOCS/'data'; HISTORY_PATH=DATA_DIR/'history.json'; LATEST_PATH=DATA_DIR/'latest.json'
+ROOT=Path(__file__).resolve().parent; DOCS=ROOT/'docs'; DATA_DIR=DOCS/'data'; LATEST_PATH=DATA_DIR/'latest.json'
 BASE='https://openapi.twse.com.tw/v1'
 ENDPOINTS={'index':f'{BASE}/exchangeReport/MI_INDEX','stocks':f'{BASE}/exchangeReport/STOCK_DAY_ALL','margin':f'{BASE}/exchangeReport/MI_MARGN','news':f'{BASE}/news/newsList','funds':f'{BASE}/opendata/t187ap47_L'}
 WATCHLIST=['0050','2330','2317','2454','2308','2382']; TAIPEI=timezone(timedelta(hours=8))
@@ -31,6 +31,23 @@ def get_json(url, attempts=3, timeout=30):
             })
             with urlopen(req,timeout=timeout) as r:return json.loads(r.read().decode('utf-8-sig'))
         except (HTTPError,URLError,TimeoutError,json.JSONDecodeError) as e:
+            last=e
+            if i+1<attempts:time.sleep(2**i)
+    raise RuntimeError(f'API failed: {url}: {last}')
+
+def get_text(url, attempts=3, timeout=30):
+    """Fetch the official RWD download, which currently returns CSV."""
+    last=None
+    for i in range(attempts):
+        try:
+            req=Request(cache_busted_url(url),headers={
+                'User-Agent':'taiwan-market-dashboard/1.1',
+                'Cache-Control':'no-cache, no-store, max-age=0',
+                'Pragma':'no-cache',
+            })
+            with urlopen(req,timeout=timeout) as r:
+                return r.read().decode('utf-8-sig')
+        except (HTTPError,URLError,TimeoutError,UnicodeDecodeError) as e:
             last=e
             if i+1<attempts:time.sleep(2**i)
     raise RuntimeError(f'API failed: {url}: {last}')
@@ -84,6 +101,27 @@ def parse_stocks(payload):
         out.append({'code':code,'name':name,'close':close,'change':change,'pct':pct,'volume':volume or 0,'value':value or 0})
     return out
 
+def load_daily_stocks(trade_date):
+    """Use TWSE's current official after-trading download for the full market.
+
+    The OpenAPI STOCK_DAY_ALL endpoint has intermittently returned an empty
+    response, whereas this RWD endpoint is the published daily closing file.
+    """
+    date=trade_date.replace('-','')
+    url=f'https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY_ALL?date={date}&response=csv'
+    text=get_text(url,attempts=4)
+    rows=list(csv.DictReader(io.StringIO(text)))
+    out=[]
+    for r in rows:
+        code=first_text(r,'證券代號','Code'); name=first_text(r,'證券名稱','Name')
+        close=first_num(r,'收盤價','Close'); change=first_num(r,'漲跌價差','漲跌價','漲跌','Change')
+        volume=first_num(r,'成交股數','成交量','Volume'); value=first_num(r,'成交金額','Turnover','Value')
+        if not code or not name or close is None or change is None:continue
+        prev=close-change; pct=change/prev*100 if prev else 0
+        out.append({'code':code,'name':name,'close':close,'change':change,'pct':pct,'volume':volume or 0,'value':value or 0})
+    if len(out)<100:raise RuntimeError(f'RWD stock data incomplete: {len(out)}')
+    return out
+
 def parse_etf_master(payload):
     """Identify listed ETFs from TWSE's official fund master data.
     The endpoint's field names can evolve, so classification is deliberately flexible.
@@ -123,14 +161,6 @@ def parse_news(payload):
         if title:out.append({'title':title,'link':link,'date':date})
     return out[:12]
 
-def load_history():
-    if not HISTORY_PATH.exists():return []
-    try:return json.loads(HISTORY_PATH.read_text(encoding='utf-8'))
-    except Exception:return []
-
-def save_history(history):
-    history=sorted({x['date']:x for x in history if 'date' in x}.values(),key=lambda x:x['date'])[-180:]; DATA_DIR.mkdir(parents=True,exist_ok=True); HISTORY_PATH.write_text(json.dumps(history,ensure_ascii=False,indent=2),encoding='utf-8')
-
 def market_summary(stocks):
     valid=[s for s in stocks if s['close']>0]; up=sum(s['change']>0 for s in valid); down=sum(s['change']<0 for s in valid); return {'stocks':len(valid),'up':up,'down':down,'unchanged':len(valid)-up-down,'turnover':sum(s['value'] for s in valid)}
 
@@ -165,8 +195,8 @@ def main():
         print(f"Unexpected future date from TWSE: {index['date']} > today {today}")
         return 2
     target=index['date']
-    stocks=parse_stocks(get_json(ENDPOINTS['stocks'], attempts=4))
-    if len(stocks)<100:print(f'Stock data incomplete: {len(stocks)}');return 2
+    try:stocks=load_daily_stocks(target)
+    except Exception as e:print(f'Stock data unavailable: {e}');return 2
     market=market_summary(stocks); gainers=sorted(stocks,key=lambda s:s['pct'],reverse=True)[:10]; losers=sorted(stocks,key=lambda s:s['pct'])[:10]; active=sorted(stocks,key=lambda s:s['value'],reverse=True)[:10]; watch=[s for s in stocks if s['code'] in WATCHLIST]; volume_top=sorted(stocks,key=lambda s:s['volume'],reverse=True)[:15]
     try:etfs=build_etfs(get_json(ENDPOINTS['funds'], attempts=4),stocks)
     except Exception as e:print(f'ETF master unavailable: {e}');etfs=[]
@@ -175,7 +205,7 @@ def main():
     for r in records(get_json(ENDPOINTS['index'], attempts=4)):
         name=str(r.get('指數','')); pct=first_num(r,'漲跌百分比'); close=first_num(r,'收盤指數')
         if '類指數' in name and pct is not None and close is not None:sectors.append({'name':name,'pct':pct,'close':close})
-    history=load_history(); trend=trend_analysis(index,market,history); save_history(history+[{'date':target,'index':index['close'],'index_pct':index['pct'],'turnover':market['turnover'],'up':market['up'],'down':market['down'],'unchanged':market['unchanged']}])
+    trend=trend_analysis(index,market,[])
     try:news=parse_news(get_json(ENDPOINTS['news'], attempts=4))
     except Exception as e:print(f'News unavailable: {e}');news=[]
     try:margin=parse_margin(get_json(ENDPOINTS['margin'], attempts=4))
