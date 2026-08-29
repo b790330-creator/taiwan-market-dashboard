@@ -9,7 +9,14 @@ on:
       - .github/workflows/update.yml
   schedule:
     - cron: '30 6 * * 1-5'
+    - cron: '30 23 * * 0-4'
   workflow_dispatch:
+    inputs:
+      force:
+        description: '強制執行（忽略非交易日檢查，用於手動測試）'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -23,27 +30,24 @@ jobs:
 
       - name: Update market data
         shell: bash
+        env:
+          FORCE_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '1' || '' }}
         run: |
           set -e
-          for i in $(seq 1 19); do
-            echo "Attempt $i/19"
+          for i in 1 2 3; do
+            echo "Attempt $i/3"
             set +e
             python3 update.py
             code=$?
             set -e
-            today=$(TZ=Asia/Taipei date +%F)
-            saved=$(python3 -c "import json; print(json.load(open('docs/data/latest.json')).get('trade_date',''))" 2>/dev/null || true)
-            echo "Target=$today Saved=$saved Exit=$code"
-            if [ "$code" -eq 0 ] && [ "$saved" = "$today" ]; then
-              echo "SUCCESS: market data is current for $today"
+            if [ "$code" = "0" ]; then
+              echo "update.py finished cleanly (updated, or nothing new yet)."
               exit 0
             fi
-            if [ "$i" -lt 19 ]; then
-              echo "NOT READY: waiting 5 minutes"
-              sleep 300
-            fi
+            echo "update.py exited with code $code; waiting 3 minutes before retry."
+            sleep 180
           done
-          echo "FAILED: today's market data was not published"
+          echo "FAILED: update.py kept failing after 3 attempts."
           exit 1
 
       - name: Commit generated data
