@@ -78,7 +78,7 @@ def parse_index(payload):
 def parse_stocks(payload):
     out=[]
     for r in records(payload):
-        code=first_text(r,'證券代號','Code'); name=first_text(r,'證券名稱','Name'); close=first_num(r,'收盤價','Close'); change=first_num(r,'漲跌價','漲跌','Change'); volume=first_num(r,'成交股數','成交量','Volume'); value=first_num(r,'成交金額','Turnover','Value')
+        code=first_text(r,'證券代號','Code'); name=first_text(r,'證券名稱','Name'); close=first_num(r,'收盤價','Close'); change=first_num(r,'漲跌價差','漲跌價','漲跌','Change'); volume=first_num(r,'成交股數','成交量','Volume'); value=first_num(r,'成交金額','Turnover','Value')
         if not code or not name or close is None or change is None:continue
         prev=close-change; pct=change/prev*100 if prev else 0
         out.append({'code':code,'name':name,'close':close,'change':change,'pct':pct,'volume':volume or 0,'value':value or 0})
