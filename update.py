@@ -164,19 +164,11 @@ def parse_news(payload):
 def market_summary(stocks):
     valid=[s for s in stocks if s['close']>0]; up=sum(s['change']>0 for s in valid); down=sum(s['change']<0 for s in valid); return {'stocks':len(valid),'up':up,'down':down,'unchanged':len(valid)-up-down,'turnover':sum(s['value'] for s in valid)}
 
-def trend_analysis(index,market,history):
-    current={'date':index['date'],'index':index['close'],'turnover':market['turnover'],'up':market['up'],'down':market['down']}; hist=sorted({x['date']:x for x in history+[current]}.values(),key=lambda x:x['date']); recent=hist[-20:]; score=50; reasons=[]; den=market['up']+market['down']; breadth=market['up']/den if den else .5
+def trend_analysis(index,market):
+    score=50; reasons=[]; den=market['up']+market['down']; breadth=market['up']/den if den else .5
     score += 15 if breadth>=.60 else 8 if breadth>=.52 else -8 if breadth<=.40 else -3 if breadth<=.48 else 0; reasons.append('上漲家數明顯多於下跌家數' if breadth>=.60 else '下跌家數明顯多於上漲家數' if breadth<=.40 else '漲跌家數接近，盤勢分歧')
     if index['pct'] is not None:score += 10 if index['pct']>=1 else 5 if index['pct']>0 else -5 if index['pct']<0 else 0; reasons.append(f"加權指數今日{'上漲' if index['pct']>0 else '下跌' if index['pct']<0 else '持平'} {abs(index['pct']):.2f}%")
-    ret5=ret20=None
-    if len(recent)>=5:
-        ret5=(index['close']/recent[-5]['index']-1)*100 if recent[-5]['index'] else 0; score += 10 if ret5>1 else 5 if ret5>0 else -5 if ret5<-1 else 0; reasons.append(f'近5個交易日指數變動 {ret5:+.2f}%')
-        avg=sum(x.get('turnover',0) for x in recent[:-1])/max(1,len(recent)-1)
-        if avg:
-            ratio=market['turnover']/avg; score += 5 if ratio>=1.2 else -3 if ratio<=.8 else 0; reasons.append(f'成交金額約為近4日平均的 {ratio:.2f} 倍')
-    if len(recent)>=20:
-        ret20=(index['close']/recent[0]['index']-1)*100 if recent[0]['index'] else 0; score += 10 if ret20>3 else 5 if ret20>0 else -5 if ret20<-3 else 0; reasons.append(f'近20個交易日指數變動 {ret20:+.2f}%')
-    score=max(0,min(100,int(round(score)))); label='偏多' if score>=65 else '稍偏多' if score>=55 else '中性' if score>=45 else '稍偏空' if score>=35 else '偏空'; return {'score':score,'label':label,'reasons':reasons,'history_days':len(hist),'ret5':ret5,'ret20':ret20}
+    score=max(0,min(100,int(round(score)))); label='偏多' if score>=65 else '稍偏多' if score>=55 else '中性' if score>=45 else '稍偏空' if score>=35 else '偏空'; return {'score':score,'label':label,'reasons':reasons}
 
 def load_latest_trade_date():
     if not LATEST_PATH.exists():return None
@@ -205,7 +197,7 @@ def main():
     for r in records(get_json(ENDPOINTS['index'], attempts=4)):
         name=str(r.get('指數','')); pct=first_num(r,'漲跌百分比'); close=first_num(r,'收盤指數')
         if '類指數' in name and pct is not None and close is not None:sectors.append({'name':name,'pct':pct,'close':close})
-    trend=trend_analysis(index,market,[])
+    trend=trend_analysis(index,market)
     try:news=parse_news(get_json(ENDPOINTS['news'], attempts=4))
     except Exception as e:print(f'News unavailable: {e}');news=[]
     try:margin=parse_margin(get_json(ENDPOINTS['margin'], attempts=4))
