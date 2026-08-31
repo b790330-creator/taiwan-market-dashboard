@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Build a Taiwan stock + ETF market snapshot from official TWSE OpenAPI data."""
+"""Build a Taiwan stock + ETF market snapshot from official TWSE daily data."""
 from __future__ import annotations
 import csv, io, json, os, re, sys, time
 from datetime import datetime, timedelta, timezone
@@ -46,7 +46,9 @@ def get_text(url, attempts=3, timeout=30):
                 'Pragma':'no-cache',
             })
             with urlopen(req,timeout=timeout) as r:
-                return r.read().decode('utf-8-sig')
+                body=r.read()
+                try:return body.decode('utf-8-sig')
+                except UnicodeDecodeError:return body.decode('cp950')
         except (HTTPError,URLError,TimeoutError,UnicodeDecodeError) as e:
             last=e
             if i+1<attempts:time.sleep(2**i)
@@ -111,6 +113,8 @@ def load_daily_stocks(trade_date):
     url=f'https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY_ALL?date={date}&response=csv'
     text=get_text(url,attempts=4)
     rows=list(csv.DictReader(io.StringIO(text)))
+    reported_dates={roc_to_iso(first_text(r,'日期','Date')) for r in rows if first_text(r,'日期','Date')}
+    if reported_dates and reported_dates!={trade_date}:raise RuntimeError(f'RWD stock date mismatch: expected {trade_date}, got {sorted(reported_dates)}')
     out=[]
     for r in rows:
         code=first_text(r,'證券代號','Code'); name=first_text(r,'證券名稱','Name')
@@ -121,6 +125,25 @@ def load_daily_stocks(trade_date):
         out.append({'code':code,'name':name,'close':close,'change':change,'pct':pct,'volume':volume or 0,'value':value or 0})
     if len(out)<100:raise RuntimeError(f'RWD stock data incomplete: {len(out)}')
     return out
+
+def load_daily_indices(trade_date):
+    """Read the official daily index file, avoiding delayed OpenAPI index data."""
+    date=trade_date.replace('-','')
+    url=f'https://www.twse.com.tw/rwd/zh/afterTrading/MI_INDEX?date={date}&type=IND&response=csv'
+    rows=list(csv.reader(io.StringIO(get_text(url,attempts=4))))
+    reported_date=roc_to_iso(rows[0][0]) if rows and rows[0] else None
+    if reported_date and reported_date!=trade_date:raise RuntimeError(f'RWD index date mismatch: expected {trade_date}, got {reported_date}')
+    target=next((r for r in rows if r and r[0].strip()=='發行量加權股價指數'),None)
+    if not target or len(target)<5:raise RuntimeError('RWD index data has no usable TAIEX row')
+    close=num(target[1]); change=num(target[3]); pct=num(target[4])
+    if close is None or change is None or pct is None:raise RuntimeError('RWD index data has incomplete TAIEX values')
+    if target[2].strip()=='-':change=-abs(change)
+    sectors=[]
+    for r in rows:
+        if len(r)>=5 and '類指數' in r[0]:
+            sector_pct=num(r[4]); sector_close=num(r[1])
+            if sector_pct is not None and sector_close is not None:sectors.append({'name':r[0].strip(),'pct':sector_pct,'close':sector_close})
+    return {'date':trade_date,'close':close,'change':change,'pct':pct},sectors
 
 def parse_etf_master(payload):
     """Identify listed ETFs from TWSE's official fund master data.
@@ -178,30 +201,24 @@ def load_latest_trade_date():
 def main():
     now=datetime.now(TAIPEI); today=now.date().isoformat()
     if now.weekday()>=5 and os.getenv('FORCE_RUN')!='1':print(f'Weekend: {today}');return 0
-    index=parse_index(get_json(ENDPOINTS['index'], attempts=4))
+    try:index,sectors=load_daily_indices(today)
+    except Exception as e:print(f'ERROR: Daily index unavailable for {today}: {e}');return 2
     last_saved=load_latest_trade_date()
     if index['date']==last_saved:
         print(f"No new data yet. TWSE latest={index['date']} is already saved.")
         return 0
-    if index['date']>today:
-        print(f"Unexpected future date from TWSE: {index['date']} > today {today}")
-        return 2
     target=index['date']
     try:stocks=load_daily_stocks(target)
-    except Exception as e:print(f'Stock data unavailable: {e}');return 2
+    except Exception as e:print(f'ERROR: Stock data unavailable for {target}: {e}');return 2
     market=market_summary(stocks); gainers=sorted(stocks,key=lambda s:s['pct'],reverse=True)[:10]; losers=sorted(stocks,key=lambda s:s['pct'])[:10]; active=sorted(stocks,key=lambda s:s['value'],reverse=True)[:10]; watch=[s for s in stocks if s['code'] in WATCHLIST]; volume_top=sorted(stocks,key=lambda s:s['volume'],reverse=True)[:15]
     try:etfs=build_etfs(get_json(ENDPOINTS['funds'], attempts=4),stocks)
     except Exception as e:print(f'ETF master unavailable: {e}');etfs=[]
     etf_active=sorted(etfs,key=lambda s:s['value'],reverse=True)[:10]; etf_gainers=sorted(etfs,key=lambda s:s['pct'],reverse=True)[:10]; etf_losers=sorted(etfs,key=lambda s:s['pct'])[:10]; positive2=[s for s in etfs if s['is_positive2']]; positive2_rank=sorted(positive2,key=lambda s:s['pct'],reverse=True); positive2_active=sorted(positive2,key=lambda s:s['value'],reverse=True)[:10]
-    sectors=[]
-    for r in records(get_json(ENDPOINTS['index'], attempts=4)):
-        name=str(r.get('指數','')); pct=first_num(r,'漲跌百分比'); close=first_num(r,'收盤指數')
-        if '類指數' in name and pct is not None and close is not None:sectors.append({'name':name,'pct':pct,'close':close})
     trend=trend_analysis(index,market)
     try:news=parse_news(get_json(ENDPOINTS['news'], attempts=4))
     except Exception as e:print(f'News unavailable: {e}');news=[]
     try:margin=parse_margin(get_json(ENDPOINTS['margin'], attempts=4))
     except Exception as e:print(f'Margin unavailable: {e}');margin={}
-    payload={'generated_at':now.isoformat(),'trade_date':target,'source':'TWSE OpenAPI','market':{**market,'turnover_billion':market['turnover']/1e8,'index':index},'trend':trend,'watchlist':watch,'gainers':gainers,'losers':losers,'active':active,'stocks':volume_top,'etf_count':len(etfs),'etf_active':etf_active,'etf_gainers':etf_gainers,'etf_losers':etf_losers,'positive2_count':len(positive2),'positive2_rank':positive2_rank,'positive2_active':positive2_active,'sectors_up':sorted(sectors,key=lambda x:x['pct'],reverse=True)[:8],'sectors_down':sorted(sectors,key=lambda x:x['pct'])[:8],'margin':margin,'news':news,'notes':['ETF 排行使用 TWSE 官方基金基本資料與上市日成交資料交叉整理。','正2排行以槓桿型 ETF 中的單日正向兩倍商品分類；槓桿／反向 ETF 是以單日報酬目標設計，長期累積報酬不等於指數累積報酬的簡單兩倍。','趨勢思考為規則式市場統計，不是買賣訊號，也不是投資建議。']}; DATA_DIR.mkdir(parents=True,exist_ok=True); LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8'); print(f"Updated {target}: {len(stocks)} securities, {len(etfs)} ETFs, {len(positive2)} positive-2 ETFs, trend={trend['label']}({trend['score']})"); return 0
+    payload={'generated_at':now.isoformat(),'trade_date':target,'source':'TWSE official RWD + OpenAPI','data_status':{'state':'current','checked_at':now.isoformat(),'message':'已取得當日官方收盤資料'},'market':{**market,'turnover_billion':market['turnover']/1e8,'index':index},'trend':trend,'watchlist':watch,'gainers':gainers,'losers':losers,'active':active,'stocks':volume_top,'etf_count':len(etfs),'etf_active':etf_active,'etf_gainers':etf_gainers,'etf_losers':etf_losers,'positive2_count':len(positive2),'positive2_rank':positive2_rank,'positive2_active':positive2_active,'sectors_up':sorted(sectors,key=lambda x:x['pct'],reverse=True)[:8],'sectors_down':sorted(sectors,key=lambda x:x['pct'])[:8],'margin':margin,'news':news,'notes':['ETF 排行使用 TWSE 官方基金基本資料與上市日成交資料交叉整理。','正2排行以槓桿型 ETF 中的單日正向兩倍商品分類；槓桿／反向 ETF 是以單日報酬目標設計，長期累積報酬不等於指數累積報酬的簡單兩倍。','趨勢思考為規則式市場統計，不是買賣訊號，也不是投資建議。']}; DATA_DIR.mkdir(parents=True,exist_ok=True); LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8'); print(f"Updated {target}: {len(stocks)} securities, {len(etfs)} ETFs, {len(positive2)} positive-2 ETFs, trend={trend['label']}({trend['score']})"); return 0
 
 if __name__=='__main__':sys.exit(main())

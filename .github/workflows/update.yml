@@ -8,8 +8,11 @@ on:
       - update.py
       - .github/workflows/update.yml
   schedule:
-    - cron: '30 6 * * 1-5'
-    - cron: '30 23 * * 0-4'
+    # GitHub Actions cron is UTC: these are 14:35, 15:05, 15:35 and 16:05 Asia/Taipei.
+    - cron: '35 6 * * 1-5'
+    - cron: '5 7 * * 1-5'
+    - cron: '35 7 * * 1-5'
+    - cron: '5 8 * * 1-5'
   workflow_dispatch:
     inputs:
       force:
