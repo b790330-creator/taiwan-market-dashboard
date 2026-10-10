@@ -171,11 +171,26 @@ def build_etfs(master_payload, stocks):
         out.append(item)
     return out
 
-def parse_margin(payload):
-    for r in records(payload):
-        if '融資餘額' in json.dumps(r,ensure_ascii=False) or '融券餘額' in json.dumps(r,ensure_ascii=False):
-            return {str(k):n for k,v in r.items() if ('融資' in str(k) or '融券' in str(k)) and (n:=num(v)) is not None}
-    return {}
+def load_daily_margin(trade_date):
+    """Read the official market-wide margin/short-selling balance table.
+
+    MI_MARGN is NOT a per-stock table: it's a 3-row aggregate for the whole
+    market (融資/融券/融資金額), each row sharing the same 6 generic columns
+    (項目/買進/賣出/現金(券)償還/前日餘額/今日餘額). The previous parser
+    looked for a field literally named "融資餘額"/"融券餘額", which never
+    exists, so it silently returned {} on every single run.
+    """
+    date=trade_date.replace('-','')
+    url=f'https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?date={date}&response=csv'
+    try:rows=list(csv.DictReader(io.StringIO(get_text(url,attempts=3))))
+    except Exception:return {}
+    labels={'融資(交易單位)':'financing_lots','融券(交易單位)':'short_lots','融資金額(仟元)':'financing_amount_thousand'}
+    out={}
+    for r in rows:
+        key=labels.get(first_text(r,'項目'))
+        if not key:continue
+        out[key]={'buy':first_num(r,'買進'),'sell':first_num(r,'賣出'),'redeem':first_num(r,'現金(券)償還'),'prev_balance':first_num(r,'前日餘額'),'today_balance':first_num(r,'今日餘額')}
+    return out
 
 def parse_news(payload):
     out=[]
@@ -217,7 +232,7 @@ def main():
     trend=trend_analysis(index,market)
     try:news=parse_news(get_json(ENDPOINTS['news'], attempts=4))
     except Exception as e:print(f'News unavailable: {e}');news=[]
-    try:margin=parse_margin(get_json(ENDPOINTS['margin'], attempts=4))
+    try:margin=load_daily_margin(target)
     except Exception as e:print(f'Margin unavailable: {e}');margin={}
     payload={'generated_at':now.isoformat(),'trade_date':target,'source':'TWSE official RWD + OpenAPI','data_status':{'state':'current','checked_at':now.isoformat(),'message':'已取得當日官方收盤資料'},'market':{**market,'turnover_billion':market['turnover']/1e8,'index':index},'trend':trend,'watchlist':watch,'gainers':gainers,'losers':losers,'active':active,'stocks':volume_top,'etf_count':len(etfs),'etf_active':etf_active,'etf_gainers':etf_gainers,'etf_losers':etf_losers,'positive2_count':len(positive2),'positive2_rank':positive2_rank,'positive2_active':positive2_active,'sectors_up':sorted(sectors,key=lambda x:x['pct'],reverse=True)[:8],'sectors_down':sorted(sectors,key=lambda x:x['pct'])[:8],'margin':margin,'news':news,'notes':['ETF 排行使用 TWSE 官方基金基本資料與上市日成交資料交叉整理。','正2排行以槓桿型 ETF 中的單日正向兩倍商品分類；槓桿／反向 ETF 是以單日報酬目標設計，長期累積報酬不等於指數累積報酬的簡單兩倍。','趨勢思考為規則式市場統計，不是買賣訊號，也不是投資建議。']}; DATA_DIR.mkdir(parents=True,exist_ok=True); LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8'); print(f"Updated {target}: {len(stocks)} securities, {len(etfs)} ETFs, {len(positive2)} positive-2 ETFs, trend={trend['label']}({trend['score']})"); return 0
 

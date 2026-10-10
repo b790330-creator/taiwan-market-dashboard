@@ -8,11 +8,18 @@ on:
       - update.py
       - .github/workflows/update.yml
   schedule:
-    # GitHub Actions cron is UTC: these are 14:35, 15:05, 15:35 and 16:05 Asia/Taipei.
+    # GitHub Actions cron is UTC: these are 14:35, 15:05, 15:35, 16:05, 16:35,
+    # 17:05, 17:35 and 18:05 Asia/Taipei. Each run checks first and exits
+    # immediately if there's nothing new yet, so adding later safety-net
+    # attempts costs almost nothing.
     - cron: '35 6 * * 1-5'
     - cron: '5 7 * * 1-5'
     - cron: '35 7 * * 1-5'
     - cron: '5 8 * * 1-5'
+    - cron: '35 8 * * 1-5'
+    - cron: '5 9 * * 1-5'
+    - cron: '35 9 * * 1-5'
+    - cron: '5 10 * * 1-5'
   workflow_dispatch:
     inputs:
       force:
