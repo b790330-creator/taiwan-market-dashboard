@@ -182,14 +182,24 @@ def load_daily_margin(trade_date):
     """
     date=trade_date.replace('-','')
     url=f'https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?date={date}&response=csv'
-    try:rows=list(csv.DictReader(io.StringIO(get_text(url,attempts=3))))
+    try:text=get_text(url,attempts=3)
     except Exception:return {}
+    # The download has a title line ("115年..信用交易統計") before the real
+    # header row, so a plain csv.DictReader misreads the title as the header
+    # and every row comes back empty. Find the row that starts with "項目"
+    # (the real header) the same way load_daily_indices locates TAIEX.
+    rows=list(csv.reader(io.StringIO(text)))
+    header_idx=next((i for i,r in enumerate(rows) if r and r[0].strip()=='項目'),None)
+    if header_idx is None:return {}
+    header=[c.strip() for c in rows[header_idx]]
     labels={'融資(交易單位)':'financing_lots','融券(交易單位)':'short_lots','融資金額(仟元)':'financing_amount_thousand'}
     out={}
-    for r in rows:
-        key=labels.get(first_text(r,'項目'))
+    for r in rows[header_idx+1:]:
+        if not r or not r[0].strip():continue
+        key=labels.get(r[0].strip())
         if not key:continue
-        out[key]={'buy':first_num(r,'買進'),'sell':first_num(r,'賣出'),'redeem':first_num(r,'現金(券)償還'),'prev_balance':first_num(r,'前日餘額'),'today_balance':first_num(r,'今日餘額')}
+        d=dict(zip(header,r))
+        out[key]={'buy':first_num(d,'買進'),'sell':first_num(d,'賣出'),'redeem':first_num(d,'現金(券)償還'),'prev_balance':first_num(d,'前日餘額'),'today_balance':first_num(d,'今日餘額')}
     return out
 
 def parse_news(payload):
