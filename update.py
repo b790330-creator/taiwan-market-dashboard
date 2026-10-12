@@ -199,7 +199,10 @@ def load_daily_margin(trade_date):
         key=labels.get(r[0].strip())
         if not key:continue
         d=dict(zip(header,r))
-        out[key]={'buy':first_num(d,'買進'),'sell':first_num(d,'賣出'),'redeem':first_num(d,'現金(券)償還'),'prev_balance':first_num(d,'前日餘額'),'today_balance':first_num(d,'今日餘額')}
+        prev=first_num(d,'前日餘額'); today_bal=first_num(d,'今日餘額')
+        change=(today_bal-prev) if (prev is not None and today_bal is not None) else None
+        change_pct=(change/prev*100) if (change is not None and prev) else None
+        out[key]={'buy':first_num(d,'買進'),'sell':first_num(d,'賣出'),'redeem':first_num(d,'現金(券)償還'),'prev_balance':prev,'today_balance':today_bal,'change':change,'change_pct':change_pct}
     return out
 
 def backfill_margin_if_missing(trade_date):
