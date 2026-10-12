@@ -202,6 +202,24 @@ def load_daily_margin(trade_date):
         out[key]={'buy':first_num(d,'買進'),'sell':first_num(d,'賣出'),'redeem':first_num(d,'現金(券)償還'),'prev_balance':first_num(d,'前日餘額'),'today_balance':first_num(d,'今日餘額')}
     return out
 
+def backfill_margin_if_missing(trade_date):
+    """Margin/credit data (MI_MARGN) tends to publish later than price data,
+    so the day's snapshot can already be saved with margin still empty. Once
+    there's nothing new to save, check whether margin is still missing for
+    today and patch it in without touching anything else.
+    """
+    if not LATEST_PATH.exists():return 0
+    try:payload=json.loads(LATEST_PATH.read_text(encoding='utf-8'))
+    except Exception:return 0
+    if payload.get('trade_date')!=trade_date or payload.get('margin'):return 0
+    try:margin=load_daily_margin(trade_date)
+    except Exception as e:print(f'Margin backfill failed: {e}');return 0
+    if not margin:print(f'Margin for {trade_date} still not published yet.');return 0
+    payload['margin']=margin
+    LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
+    print(f'Backfilled margin for {trade_date}.')
+    return 0
+
 def parse_news(payload):
     out=[]
     for r in records(payload):
@@ -231,7 +249,7 @@ def main():
     last_saved=load_latest_trade_date()
     if index['date']==last_saved:
         print(f"No new data yet. TWSE latest={index['date']} is already saved.")
-        return 0
+        return backfill_margin_if_missing(index['date'])
     target=index['date']
     try:stocks=load_daily_stocks(target)
     except Exception as e:print(f'ERROR: Stock data unavailable for {target}: {e}');return 2
