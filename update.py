@@ -205,6 +205,42 @@ def load_daily_margin(trade_date):
         out[key]={'buy':first_num(d,'買進'),'sell':first_num(d,'賣出'),'redeem':first_num(d,'現金(券)償還'),'prev_balance':prev,'today_balance':today_bal,'change':change,'change_pct':change_pct}
     return out
 
+PRED_PATH=DATA_DIR/'predictions.json'
+
+def load_predictions():
+    try:return json.loads(PRED_PATH.read_text(encoding='utf-8'))
+    except Exception:return []
+
+def predict_next(index,market,margin):
+    """Transparent rule-based estimate of P(TAIEX closes up next trading day).
+    Anchored on the base rate (~53%) and nudged by a few short-term effects;
+    deliberately clamped to 40-62% because next-day direction is close to a coin flip."""
+    p=53.0; f=[]; pct=index.get('pct') or 0
+    if pct<=-2:p+=6;f.append(f'今日重挫 {pct:.2f}%，隔日技術性反彈機率略增 (+6)')
+    elif pct<=-1:p+=3;f.append(f'今日明顯下跌 {pct:.2f}%，短線超跌反彈 (+3)')
+    elif pct>=2:p-=4;f.append(f'今日大漲 {pct:.2f}%，短線過熱獲利了結 (-4)')
+    elif pct>=1:p-=1;f.append(f'今日明顯上漲 {pct:.2f}%，追價力道偏熱 (-1)')
+    else:f.append('今日漲跌幅不大，無明顯短線反轉訊號 (0)')
+    den=market['up']+market['down']; br=market['up']/den if den else .5
+    if br<=.25:p+=2;f.append(f'上漲家數僅 {br*100:.0f}%，恐慌殺盤常見隔日修正 (+2)')
+    elif br>=.75:p-=2;f.append(f'上漲家數達 {br*100:.0f}%，普漲後追高風險 (-2)')
+    fin=(margin or {}).get('financing_lots') or {}; cp=fin.get('change_pct')
+    if cp is not None and cp>=0.4 and pct<0:p-=2;f.append(f'下跌日融資仍增加 {cp:.2f}%，散戶槓桿被套風險 (-2)')
+    elif cp is not None and cp<=-0.4 and pct<0:p+=2;f.append(f'下跌日融資減少 {abs(cp):.2f}%，斷頭賣壓釋放 (+2)')
+    p=max(40.0,min(62.0,p)); label='偏多' if p>=57 else '中性偏多' if p>=53 else '中性' if p>=48 else '偏空'
+    return {'prob_up':round(p),'label':label,'factors':f}
+
+def update_prediction_log(target,index,pred):
+    log=load_predictions()
+    for e in log:
+        if not e.get('resolved') and e['date']<target:
+            e['resolved']=True; e['actual_up']=index['close']>e['close']; e['hit']=(e['prob_up']>=50)==e['actual_up']
+    if not any(e['date']==target for e in log):log.append({'date':target,'close':index['close'],'prob_up':pred['prob_up'],'resolved':False})
+    log=log[-120:]
+    PRED_PATH.write_text(json.dumps(log,ensure_ascii=False,indent=1),encoding='utf-8')
+    done=[e for e in log if e.get('resolved')]
+    return {'n':len(done),'hits':sum(1 for e in done if e.get('hit'))}
+
 def backfill_margin_if_missing(trade_date):
     """Margin/credit data (MI_MARGN) tends to publish later than price data,
     so the day's snapshot can already be saved with margin still empty. Once
@@ -265,6 +301,7 @@ def main():
     except Exception as e:print(f'News unavailable: {e}');news=[]
     try:margin=load_daily_margin(target)
     except Exception as e:print(f'Margin unavailable: {e}');margin={}
-    payload={'generated_at':now.isoformat(),'trade_date':target,'source':'TWSE official RWD + OpenAPI','data_status':{'state':'current','checked_at':now.isoformat(),'message':'已取得當日官方收盤資料'},'market':{**market,'turnover_billion':market['turnover']/1e8,'index':index},'trend':trend,'watchlist':watch,'gainers':gainers,'losers':losers,'active':active,'stocks':volume_top,'etf_count':len(etfs),'etf_active':etf_active,'etf_gainers':etf_gainers,'etf_losers':etf_losers,'positive2_count':len(positive2),'positive2_rank':positive2_rank,'positive2_active':positive2_active,'sectors_up':sorted(sectors,key=lambda x:x['pct'],reverse=True)[:8],'sectors_down':sorted(sectors,key=lambda x:x['pct'])[:8],'margin':margin,'news':news,'notes':['ETF 排行使用 TWSE 官方基金基本資料與上市日成交資料交叉整理。','正2排行以槓桿型 ETF 中的單日正向兩倍商品分類；槓桿／反向 ETF 是以單日報酬目標設計，長期累積報酬不等於指數累積報酬的簡單兩倍。','趨勢思考為規則式市場統計，不是買賣訊號，也不是投資建議。']}; DATA_DIR.mkdir(parents=True,exist_ok=True); LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8'); print(f"Updated {target}: {len(stocks)} securities, {len(etfs)} ETFs, {len(positive2)} positive-2 ETFs, trend={trend['label']}({trend['score']})"); return 0
+    pred=predict_next(index,market,margin); pred['track']=update_prediction_log(target,index,pred)
+    payload={'generated_at':now.isoformat(),'trade_date':target,'source':'TWSE official RWD + OpenAPI','data_status':{'state':'current','checked_at':now.isoformat(),'message':'已取得當日官方收盤資料'},'market':{**market,'turnover_billion':market['turnover']/1e8,'index':index},'trend':trend,'watchlist':watch,'gainers':gainers,'losers':losers,'active':active,'stocks':volume_top,'etf_count':len(etfs),'etf_active':etf_active,'etf_gainers':etf_gainers,'etf_losers':etf_losers,'positive2_count':len(positive2),'positive2_rank':positive2_rank,'positive2_active':positive2_active,'sectors_up':sorted(sectors,key=lambda x:x['pct'],reverse=True)[:8],'sectors_down':sorted(sectors,key=lambda x:x['pct'])[:8],'margin':margin,'prediction':pred,'news':news,'notes':['ETF 排行使用 TWSE 官方基金基本資料與上市日成交資料交叉整理。','正2排行以槓桿型 ETF 中的單日正向兩倍商品分類；槓桿／反向 ETF 是以單日報酬目標設計，長期累積報酬不等於指數累積報酬的簡單兩倍。','趨勢思考為規則式市場統計，不是買賣訊號，也不是投資建議。']}; DATA_DIR.mkdir(parents=True,exist_ok=True); LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8'); print(f"Updated {target}: {len(stocks)} securities, {len(etfs)} ETFs, {len(positive2)} positive-2 ETFs, trend={trend['label']}({trend['score']})"); return 0
 
 if __name__=='__main__':sys.exit(main())
