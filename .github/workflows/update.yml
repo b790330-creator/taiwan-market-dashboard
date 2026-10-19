@@ -8,14 +8,14 @@ on:
       - update.py
       - .github/workflows/update.yml
   schedule:
-    # GitHub Actions cron is UTC: these are 18:00, 19:00, 20:00 and 21:00
-    # Asia/Taipei. Each run checks first and exits immediately if there's
-    # nothing new yet, so this is a safety net, not a guess at when data
-    # is ready.
-    - cron: '0 10 * * 1-5'
-    - cron: '0 11 * * 1-5'
-    - cron: '0 12 * * 1-5'
-    - cron: '0 13 * * 1-5'
+    # UTC cron, every 2 hours, 5 tries, at :17 (GitHub delays/drops runs at the top of the hour).
+    # = 18:17, 20:17, 22:17, 00:17, 02:17 Asia/Taipei. The 00:17/02:17 runs belong to the
+    # previous trading day (update.py treats hours before 06:00 as the day before).
+    - cron: '17 10 * * 1-5'
+    - cron: '17 12 * * 1-5'
+    - cron: '17 14 * * 1-5'
+    - cron: '17 16 * * 1-5'
+    - cron: '17 18 * * 1-5'
   workflow_dispatch:
     inputs:
       force:

@@ -281,8 +281,10 @@ def load_latest_trade_date():
     except Exception:return None
 
 def main():
-    now=datetime.now(TAIPEI); today=now.date().isoformat()
-    if now.weekday()>=5 and os.getenv('FORCE_RUN')!='1':print(f'Weekend: {today}');return 0
+    now=datetime.now(TAIPEI)
+    # Runs after midnight (late scheduled retries) still belong to the previous trading day.
+    eff=now.date()-timedelta(days=1) if now.hour<6 else now.date(); today=eff.isoformat()
+    if eff.weekday()>=5 and os.getenv('FORCE_RUN')!='1':print(f'Weekend: {today}');return 0
     try:index,sectors=load_daily_indices(today)
     except Exception as e:print(f'ERROR: Daily index unavailable for {today}: {e}');return 2
     last_saved=load_latest_trade_date()
