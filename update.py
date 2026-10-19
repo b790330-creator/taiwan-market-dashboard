@@ -11,7 +11,7 @@ from urllib.request import Request, urlopen
 
 ROOT=Path(__file__).resolve().parent; DOCS=ROOT/'docs'; DATA_DIR=DOCS/'data'; LATEST_PATH=DATA_DIR/'latest.json'
 BASE='https://openapi.twse.com.tw/v1'
-ENDPOINTS={'index':f'{BASE}/exchangeReport/MI_INDEX','stocks':f'{BASE}/exchangeReport/STOCK_DAY_ALL','margin':f'{BASE}/exchangeReport/MI_MARGN','news':f'{BASE}/news/newsList','funds':f'{BASE}/opendata/t187ap47_L'}
+ENDPOINTS={'index':f'{BASE}/exchangeReport/MI_INDEX','stocks':f'{BASE}/exchangeReport/STOCK_DAY_ALL','margin':f'{BASE}/exchangeReport/MI_MARGN','news':f'{BASE}/news/newsList','funds':f'{BASE}/opendata/t187ap47_L','companies':f'{BASE}/opendata/t187ap03_L'}
 WATCHLIST=['0050','2330','2317','2454','2308','2382']; TAIPEI=timezone(timedelta(hours=8))
 
 def cache_busted_url(url):
@@ -205,6 +205,24 @@ def load_daily_margin(trade_date):
         out[key]={'buy':first_num(d,'買進'),'sell':first_num(d,'賣出'),'redeem':first_num(d,'現金(券)償還'),'prev_balance':prev,'today_balance':today_bal,'change':change,'change_pct':change_pct}
     return out
 
+INDUSTRY_PATH=DATA_DIR/'industry.json'
+INDUSTRY_NAMES={'01':'水泥工業','02':'食品工業','03':'塑膠工業','04':'紡織纖維','05':'電機機械','06':'電器電纜','08':'玻璃陶瓷','09':'造紙工業','10':'鋼鐵工業','11':'橡膠工業','12':'汽車工業','14':'建材營造','15':'航運業','16':'觀光餐旅','17':'金融保險','18':'貿易百貨','19':'綜合','20':'其他','21':'化學工業','22':'生技醫療業','23':'油電燃氣業','24':'半導體業','25':'電腦及週邊設備業','26':'光電業','27':'通信網路業','28':'電子零組件業','29':'電子通路業','30':'資訊服務業','31':'其他電子業','32':'文化創意業','33':'農業科技業','34':'電子商務','35':'綠能環保','36':'數位雲端','37':'運動休閒','38':'居家生活','80':'管理股票'}
+
+def load_industry_map():
+    """code -> 產業別 name from TWSE listed-company master (t187ap03_L); falls back to last good copy."""
+    try:
+        out={}
+        for r in records(get_json(ENDPOINTS['companies'],attempts=3)):
+            code=first_text(r,'公司代號'); raw=first_text(r,'產業別')
+            if code and raw:out[code]=INDUSTRY_NAMES.get(raw.zfill(2),raw)
+        if len(out)<500:raise RuntimeError(f'industry map too small: {len(out)}')
+        DATA_DIR.mkdir(parents=True,exist_ok=True); INDUSTRY_PATH.write_text(json.dumps(out,ensure_ascii=False),encoding='utf-8')
+        return out
+    except Exception as e:
+        print(f'Industry map unavailable: {e}')
+        try:return json.loads(INDUSTRY_PATH.read_text(encoding='utf-8'))
+        except Exception:return {}
+
 PRED_PATH=DATA_DIR/'predictions.json'
 
 def load_predictions():
@@ -215,27 +233,36 @@ def predict_next(index,market,margin):
     """Transparent rule-based estimate of P(TAIEX closes up next trading day).
     Anchored on the base rate (~53%) and nudged by a few short-term effects;
     deliberately clamped to 40-62% because next-day direction is close to a coin flip."""
-    p=53.0; f=[]; pct=index.get('pct') or 0
-    if pct<=-2:p+=6;f.append(f'今日重挫 {pct:.2f}%，隔日技術性反彈機率略增 (+6)')
-    elif pct<=-1:p+=3;f.append(f'今日明顯下跌 {pct:.2f}%，短線超跌反彈 (+3)')
-    elif pct>=2:p-=4;f.append(f'今日大漲 {pct:.2f}%，短線過熱獲利了結 (-4)')
-    elif pct>=1:p-=1;f.append(f'今日明顯上漲 {pct:.2f}%，追價力道偏熱 (-1)')
-    else:f.append('今日漲跌幅不大，無明顯短線反轉訊號 (0)')
+    base=53.0; p=base; steps=[]; pct=index.get('pct') or 0
+    def add(key,name,reading,delta,why):
+        nonlocal p
+        p+=delta; steps.append({'key':key,'name':name,'reading':reading,'delta':delta,'why':why})
+    if pct<=-2:add('move','今日指數漲跌',f'{pct:+.2f}%（重挫）',6,'單日大跌後，短線賣壓常已宣洩，隔日出現技術性反彈的機率略高。')
+    elif pct<=-1:add('move','今日指數漲跌',f'{pct:+.2f}%（明顯下跌）',3,'明顯下跌後，短線超跌反彈的機率略增。')
+    elif pct>=2:add('move','今日指數漲跌',f'{pct:+.2f}%（大漲）',-4,'單日大漲後，短線獲利了結賣壓增加，隔日回檔機率略增。')
+    elif pct>=1:add('move','今日指數漲跌',f'{pct:+.2f}%（明顯上漲）',-1,'明顯上漲後追價力道偏熱，略扣分。')
+    else:add('move','今日指數漲跌',f'{pct:+.2f}%（變動不大）',0,'漲跌幅不大，沒有明顯的短線反轉訊號，不加減分。')
     den=market['up']+market['down']; br=market['up']/den if den else .5
-    if br<=.25:p+=2;f.append(f'上漲家數僅 {br*100:.0f}%，恐慌殺盤常見隔日修正 (+2)')
-    elif br>=.75:p-=2;f.append(f'上漲家數達 {br*100:.0f}%，普漲後追高風險 (-2)')
+    if br<=.25:add('breadth','上漲家數比例',f'{br*100:.0f}%（普遍下跌）',2,'幾乎全面下跌通常是恐慌性殺盤，隔日常有修正。')
+    elif br>=.75:add('breadth','上漲家數比例',f'{br*100:.0f}%（普遍上漲）',-2,'幾乎全面上漲後，追高風險上升。')
+    else:add('breadth','上漲家數比例',f'{br*100:.0f}%（分歧）',0,'漲跌家數沒有極端，不加減分。')
     fin=(margin or {}).get('financing_lots') or {}; cp=fin.get('change_pct')
-    if cp is not None and cp>=0.4 and pct<0:p-=2;f.append(f'下跌日融資仍增加 {cp:.2f}%，散戶槓桿被套風險 (-2)')
-    elif cp is not None and cp<=-0.4 and pct<0:p+=2;f.append(f'下跌日融資減少 {abs(cp):.2f}%，斷頭賣壓釋放 (+2)')
-    p=max(40.0,min(62.0,p)); label='偏多' if p>=57 else '中性偏多' if p>=53 else '中性' if p>=48 else '偏空'
-    return {'prob_up':round(p),'label':label,'factors':f}
+    if cp is None:add('margin','融資餘額變化','尚未公布',0,'融資資料尚未公布，這一項不計分。')
+    elif cp>=0.4 and pct<0:add('margin','融資餘額變化',f'{cp:+.2f}%（下跌日反而增加）',-2,'指數下跌、融資卻增加，代表散戶借錢逢低買進，若續跌容易被迫賣出。')
+    elif cp<=-0.4 and pct<0:add('margin','融資餘額變化',f'{cp:+.2f}%（下跌日減少）',2,'下跌日融資減少，代表槓桿多單已在出清，賣壓有機會釋放完畢。')
+    else:add('margin','融資餘額變化',f'{cp:+.2f}%',0,'融資變化不大或與指數同向，不加減分。')
+    raw=p; p=max(40.0,min(62.0,p)); label='偏多' if p>=57 else '中性偏多' if p>=53 else '中性' if p>=48 else '偏空'
+    f=[f"{x['name']} {x['reading']}：{x['why']} ({x['delta']:+d})" for x in steps]
+    return {'prob_up':round(p),'label':label,'factors':f,'base':base,'steps':steps,'raw':round(raw,1),'clamped':raw!=p,'inputs':{'pct':pct,'breadth':round(br*100,1),'financing_change_pct':cp}}
 
 def update_prediction_log(target,index,pred):
     log=load_predictions()
     for e in log:
         if not e.get('resolved') and e['date']<target:
             e['resolved']=True; e['actual_up']=index['close']>e['close']; e['hit']=(e['prob_up']>=50)==e['actual_up']
-    if not any(e['date']==target for e in log):log.append({'date':target,'close':index['close'],'prob_up':pred['prob_up'],'resolved':False})
+    cur=next((e for e in log if e['date']==target),None)
+    if cur is None:log.append({'date':target,'close':index['close'],'prob_up':pred['prob_up'],'resolved':False})
+    elif not cur.get('resolved'):cur['prob_up']=pred['prob_up']
     log=log[-120:]
     PRED_PATH.write_text(json.dumps(log,ensure_ascii=False,indent=1),encoding='utf-8')
     done=[e for e in log if e.get('resolved')]
@@ -255,6 +282,9 @@ def backfill_margin_if_missing(trade_date):
     except Exception as e:print(f'Margin backfill failed: {e}');return 0
     if not margin:print(f'Margin for {trade_date} still not published yet.');return 0
     payload['margin']=margin
+    try:
+        idx=payload['market']['index']; pr=predict_next(idx,payload['market'],margin); pr['track']=update_prediction_log(trade_date,idx,pr); payload['prediction']=pr
+    except Exception as e:print(f'Prediction refresh skipped: {e}')
     LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
     print(f'Backfilled margin for {trade_date}.')
     return 0
@@ -288,12 +318,15 @@ def main():
     try:index,sectors=load_daily_indices(today)
     except Exception as e:print(f'ERROR: Daily index unavailable for {today}: {e}');return 2
     last_saved=load_latest_trade_date()
-    if index['date']==last_saved:
+    if index['date']==last_saved and os.getenv('FORCE_RUN')!='1':
         print(f"No new data yet. TWSE latest={index['date']} is already saved.")
         return backfill_margin_if_missing(index['date'])
     target=index['date']
     try:stocks=load_daily_stocks(target)
     except Exception as e:print(f'ERROR: Stock data unavailable for {target}: {e}');return 2
+    imap=load_industry_map()
+    for st in stocks:
+        if st['code'] in imap:st['industry']=imap[st['code']]
     market=market_summary(stocks); gainers=sorted(stocks,key=lambda s:s['pct'],reverse=True)[:10]; losers=sorted(stocks,key=lambda s:s['pct'])[:10]; active=sorted(stocks,key=lambda s:s['value'],reverse=True)[:10]; watch=[s for s in stocks if s['code'] in WATCHLIST]; volume_top=sorted(stocks,key=lambda s:s['volume'],reverse=True)[:15]
     try:etfs=build_etfs(get_json(ENDPOINTS['funds'], attempts=4),stocks)
     except Exception as e:print(f'ETF master unavailable: {e}');etfs=[]
