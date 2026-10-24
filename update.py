@@ -316,7 +316,11 @@ def main():
     eff=now.date()-timedelta(days=1) if now.hour<6 else now.date(); today=eff.isoformat()
     if eff.weekday()>=5 and os.getenv('FORCE_RUN')!='1':print(f'Weekend: {today}');return 0
     try:index,sectors=load_daily_indices(today)
-    except Exception as e:print(f'ERROR: Daily index unavailable for {today}: {e}');return 2
+    except Exception as e:
+        if now.hour>=22 or now.hour<6:
+            # Still nothing from TWSE this late: most likely a closed day (holiday / typhoon), not an outage.
+            print(f'No index data for {today} after 22:00 - treating as a non-trading day: {e}');return 0
+        print(f'ERROR: Daily index unavailable for {today}: {e}');return 2
     last_saved=load_latest_trade_date()
     if index['date']==last_saved and os.getenv('FORCE_RUN')!='1':
         print(f"No new data yet. TWSE latest={index['date']} is already saved.")
