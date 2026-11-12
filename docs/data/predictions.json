@@ -131,6 +131,14 @@
   "date": "2026-11-11",
   "close": 44257.15,
   "prob_up": 49,
+  "resolved": true,
+  "actual_up": false,
+  "hit": true
+ },
+ {
+  "date": "2026-11-12",
+  "close": 43091.87,
+  "prob_up": 61,
   "resolved": false
  }
 ]
