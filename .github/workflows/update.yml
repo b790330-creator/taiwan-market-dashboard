@@ -6,6 +6,8 @@ on:
       - main
     paths:
       - update.py
+      - history.py
+      - backtest.py
       - .github/workflows/update.yml
   schedule:
     # UTC cron, every 2 hours, 5 tries, at :17 (GitHub delays/drops runs at the top of the hour).
@@ -55,6 +57,12 @@ jobs:
           done
           echo "FAILED: update.py kept failing after 3 attempts."
           exit 1
+
+      - name: Refresh index history and rule check
+        shell: bash
+        run: |
+          python3 history.py || echo "history step failed (non-fatal)"
+          python3 backtest.py || echo "backtest step failed (non-fatal)"
 
       - name: Commit generated data
         shell: bash
