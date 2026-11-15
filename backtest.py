@@ -17,7 +17,11 @@ def main():
         s = 0; sign = 1 if c[i] > c[i-1] else -1
         while i-s-1 >= 0 and ((c[i-s] > c[i-s-1]) == (sign == 1)) and s < 10: s += 1
         return sign * s
+    def model_v2(i):
+        p = 55 + (4 if ma(i,5) > ma(i,20) else -4) + (2 if c[i] > ma(i,20) else -2) + (1 if c[i] > c[i-1] else -1 if c[i] < c[i-1] else 0)
+        return max(40, min(62, p)) >= 50
     rules = {
+        'model_v2': model_v2,
         'always_up': lambda i: True,
         'continue_1d': lambda i: c[i] > c[i-1],
         'reverse_1d': lambda i: c[i] < c[i-1],

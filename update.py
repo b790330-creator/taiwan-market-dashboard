@@ -229,31 +229,39 @@ def load_predictions():
     try:return json.loads(PRED_PATH.read_text(encoding='utf-8'))
     except Exception:return []
 
-def predict_next(index,market,margin):
-    """Transparent rule-based estimate of P(TAIEX closes up next trading day).
-    Anchored on the base rate (~53%) and nudged by a few short-term effects;
-    deliberately clamped to 40-62% because next-day direction is close to a coin flip."""
-    base=53.0; p=base; steps=[]; pct=index.get('pct') or 0
-    def add(key,name,reading,delta,why):
-        nonlocal p
-        p+=delta; steps.append({'key':key,'name':name,'reading':reading,'delta':delta,'why':why})
-    if pct<=-2:add('move','今日指數漲跌',f'{pct:+.2f}%（重挫）',6,'單日大跌後，短線賣壓常已宣洩，隔日出現技術性反彈的機率略高。')
-    elif pct<=-1:add('move','今日指數漲跌',f'{pct:+.2f}%（明顯下跌）',3,'明顯下跌後，短線超跌反彈的機率略增。')
-    elif pct>=2:add('move','今日指數漲跌',f'{pct:+.2f}%（大漲）',-4,'單日大漲後，短線獲利了結賣壓增加，隔日回檔機率略增。')
-    elif pct>=1:add('move','今日指數漲跌',f'{pct:+.2f}%（明顯上漲）',-1,'明顯上漲後追價力道偏熱，略扣分。')
-    else:add('move','今日指數漲跌',f'{pct:+.2f}%（變動不大）',0,'漲跌幅不大，沒有明顯的短線反轉訊號，不加減分。')
+HISTORY_PATH=DATA_DIR/'index_history.json'
+
+def load_close_series(target,index):
+    """Daily TAIEX closes up to and including target (history file + today's close)."""
+    try:h=json.loads(HISTORY_PATH.read_text(encoding='utf-8'))
+    except Exception:h={}
+    h={d:v for d,v in h.items() if d<target}; h[target]=index['close']
+    return [h[d] for d in sorted(h)]
+
+def trend_steps(closes,pct):
+    """Trend-following score. Backtest on ~210 trading days: 'MA5 > MA20' called next-day direction
+    right ~60% of the time, dip-rebound ('reversal') rules were no better than a coin flip (~44-47%)."""
+    if len(closes)<21:return []
+    ma=lambda k:sum(closes[-k:])/k; c=closes[-1]; steps=[]
+    m5,m20=ma(5),ma(20)
+    steps.append({'key':'ma_cross','name':'短中期趨勢（5日均線 vs 20日均線）','reading':f'5日 {m5:,.0f}／20日 {m20:,.0f}（{"短線強於中線" if m5>m20 else "短線弱於中線"}）','delta':4 if m5>m20 else -4,'why':'短期均線在中期均線之上，代表近期走勢偏多、順勢上漲的機率較高；反之偏空。這是回測中表現最穩的一項。'})
+    steps.append({'key':'vs_ma20','name':'收盤 vs 20日均線','reading':f'收盤 {c:,.0f}（{"站上" if c>m20 else "跌破"}月線 {m20:,.0f}）','delta':2 if c>m20 else -2,'why':'站上月線代表中期趨勢仍在，跌破則偏弱。'})
+    steps.append({'key':'momentum','name':'今日方向（順勢）','reading':f'{pct:+.2f}%','delta':1 if pct>0 else -1 if pct<0 else 0,'why':'回測顯示隔日有輕微延續今日方向的傾向（約 56%），所以只給 ±1 的小幅加減。'})
+    return steps
+
+def predict_next(index,market,margin,closes=None):
+    """Next-day TAIEX up-probability. v2 (2026-11): base rate + trend-following steps, validated by
+    backtest.py; breadth/margin are shown for reference only (no demonstrated predictive power)."""
+    base=55.0; p=base; steps=[]; pct=index.get('pct') or 0
+    for st in trend_steps(closes or [],pct):p+=st['delta']; steps.append(st)
+    if not steps:steps.append({'key':'move','name':'今日指數漲跌','reading':f'{pct:+.2f}%','delta':0,'why':'歷史資料不足，暫時只用基準機率。'})
     den=market['up']+market['down']; br=market['up']/den if den else .5
-    if br<=.25:add('breadth','上漲家數比例',f'{br*100:.0f}%（普遍下跌）',2,'幾乎全面下跌通常是恐慌性殺盤，隔日常有修正。')
-    elif br>=.75:add('breadth','上漲家數比例',f'{br*100:.0f}%（普遍上漲）',-2,'幾乎全面上漲後，追高風險上升。')
-    else:add('breadth','上漲家數比例',f'{br*100:.0f}%（分歧）',0,'漲跌家數沒有極端，不加減分。')
+    steps.append({'key':'breadth','name':'上漲家數比例（僅參考）','reading':f'{br*100:.0f}%','delta':0,'why':'今天約 '+f'{br*100:.0f}%'+' 的股票上漲。回測沒有顯示它對隔日方向有穩定預測力，所以不計分，只供你判斷市場情緒。'})
     fin=(margin or {}).get('financing_lots') or {}; cp=fin.get('change_pct')
-    if cp is None:add('margin','融資餘額變化','尚未公布',0,'融資資料尚未公布，這一項不計分。')
-    elif cp>=0.4 and pct<0:add('margin','融資餘額變化',f'{cp:+.2f}%（下跌日反而增加）',-2,'指數下跌、融資卻增加，代表散戶借錢逢低買進，若續跌容易被迫賣出。')
-    elif cp<=-0.4 and pct<0:add('margin','融資餘額變化',f'{cp:+.2f}%（下跌日減少）',2,'下跌日融資減少，代表槓桿多單已在出清，賣壓有機會釋放完畢。')
-    else:add('margin','融資餘額變化',f'{cp:+.2f}%',0,'融資變化不大或與指數同向，不加減分。')
+    steps.append({'key':'margin','name':'融資餘額變化（僅參考）','reading':'尚未公布' if cp is None else f'{cp:+.2f}%','delta':0,'why':'融資大增代表槓桿變多、波動風險上升；但歷史上對隔日漲跌沒有穩定關係，所以不計分，只供參考。'})
     raw=p; p=max(40.0,min(62.0,p)); label='偏多' if p>=57 else '中性偏多' if p>=53 else '中性' if p>=48 else '偏空'
     f=[f"{x['name']} {x['reading']}：{x['why']} ({x['delta']:+d})" for x in steps]
-    return {'prob_up':round(p),'label':label,'factors':f,'base':base,'steps':steps,'raw':round(raw,1),'clamped':raw!=p,'inputs':{'pct':pct,'breadth':round(br*100,1),'financing_change_pct':cp}}
+    return {'prob_up':round(p),'label':label,'factors':f,'base':base,'steps':steps,'raw':round(raw,1),'clamped':raw!=p,'model':'v2-trend','inputs':{'pct':pct,'breadth':round(br*100,1),'financing_change_pct':cp}}
 
 def update_prediction_log(target,index,pred):
     log=load_predictions()
@@ -283,7 +291,7 @@ def backfill_margin_if_missing(trade_date):
     if not margin:print(f'Margin for {trade_date} still not published yet.');return 0
     payload['margin']=margin
     try:
-        idx=payload['market']['index']; pr=predict_next(idx,payload['market'],margin); pr['track']=update_prediction_log(trade_date,idx,pr); payload['prediction']=pr
+        idx=payload['market']['index']; pr=predict_next(idx,payload['market'],margin,load_close_series(trade_date,idx)); pr['track']=update_prediction_log(trade_date,idx,pr); payload['prediction']=pr
     except Exception as e:print(f'Prediction refresh skipped: {e}')
     LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8')
     print(f'Backfilled margin for {trade_date}.')
@@ -340,7 +348,7 @@ def main():
     except Exception as e:print(f'News unavailable: {e}');news=[]
     try:margin=load_daily_margin(target)
     except Exception as e:print(f'Margin unavailable: {e}');margin={}
-    pred=predict_next(index,market,margin); pred['track']=update_prediction_log(target,index,pred)
+    pred=predict_next(index,market,margin,load_close_series(target,index)); pred['track']=update_prediction_log(target,index,pred)
     payload={'generated_at':now.isoformat(),'trade_date':target,'source':'TWSE official RWD + OpenAPI','data_status':{'state':'current','checked_at':now.isoformat(),'message':'已取得當日官方收盤資料'},'market':{**market,'turnover_billion':market['turnover']/1e8,'index':index},'trend':trend,'watchlist':watch,'gainers':gainers,'losers':losers,'active':active,'stocks':volume_top,'etf_count':len(etfs),'etf_active':etf_active,'etf_gainers':etf_gainers,'etf_losers':etf_losers,'positive2_count':len(positive2),'positive2_rank':positive2_rank,'positive2_active':positive2_active,'sectors_up':sorted(sectors,key=lambda x:x['pct'],reverse=True)[:8],'sectors_down':sorted(sectors,key=lambda x:x['pct'])[:8],'margin':margin,'prediction':pred,'news':news,'notes':['ETF 排行使用 TWSE 官方基金基本資料與上市日成交資料交叉整理。','正2排行以槓桿型 ETF 中的單日正向兩倍商品分類；槓桿／反向 ETF 是以單日報酬目標設計，長期累積報酬不等於指數累積報酬的簡單兩倍。','趨勢思考為規則式市場統計，不是買賣訊號，也不是投資建議。']}; DATA_DIR.mkdir(parents=True,exist_ok=True); LATEST_PATH.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding='utf-8'); print(f"Updated {target}: {len(stocks)} securities, {len(etfs)} ETFs, {len(positive2)} positive-2 ETFs, trend={trend['label']}({trend['score']})"); return 0
 
 if __name__=='__main__':sys.exit(main())
