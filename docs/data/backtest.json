@@ -1,89 +1,89 @@
 {
- "n_days": 209,
+ "n_days": 210,
  "first": "2025-12-30",
- "last": "2026-11-12",
+ "last": "2026-11-13",
  "rules": {
   "model_v2": {
-   "all": 0.589,
-   "last120": 0.575,
-   "last60": 0.567,
+   "all": 0.586,
+   "last120": 0.567,
+   "last60": 0.55,
    "last20": 0.55
   },
   "always_up": {
-   "all": 0.55,
-   "last120": 0.533,
-   "last60": 0.517,
+   "all": 0.548,
+   "last120": 0.525,
+   "last60": 0.5,
    "last20": 0.4
   },
   "continue_1d": {
-   "all": 0.565,
+   "all": 0.562,
    "last120": 0.525,
    "last60": 0.55,
    "last20": 0.5
   },
   "reverse_1d": {
-   "all": 0.435,
+   "all": 0.438,
    "last120": 0.475,
    "last60": 0.45,
    "last20": 0.5
   },
   "ret5_pos": {
-   "all": 0.536,
+   "all": 0.533,
    "last120": 0.45,
-   "last60": 0.45,
-   "last20": 0.5
-  },
-  "ret5_neg_reversal": {
-   "all": 0.464,
-   "last120": 0.55,
-   "last60": 0.55,
-   "last20": 0.5
-  },
-  "above_ma20": {
-   "all": 0.569,
-   "last120": 0.542,
-   "last60": 0.55,
-   "last20": 0.55
-  },
-  "above_ma60": {
-   "all": 0.545,
-   "last120": 0.533,
-   "last60": 0.5,
+   "last60": 0.433,
    "last20": 0.45
   },
+  "ret5_neg_reversal": {
+   "all": 0.467,
+   "last120": 0.55,
+   "last60": 0.567,
+   "last20": 0.55
+  },
+  "above_ma20": {
+   "all": 0.571,
+   "last120": 0.55,
+   "last60": 0.55,
+   "last20": 0.6
+  },
+  "above_ma60": {
+   "all": 0.548,
+   "last120": 0.533,
+   "last60": 0.5,
+   "last20": 0.5
+  },
   "ma5_above_ma20": {
-   "all": 0.598,
+   "all": 0.6,
    "last120": 0.575,
    "last60": 0.533,
-   "last20": 0.6
+   "last20": 0.65
   },
   "trend_follow_combo": {
-   "all": 0.574,
-   "last120": 0.533,
+   "all": 0.576,
+   "last120": 0.542,
    "last60": 0.55,
-   "last20": 0.55
-  },
-  "trend_follow_ma20_ret1": {
-   "all": 0.565,
-   "last120": 0.517,
-   "last60": 0.55,
-   "last20": 0.55
-  },
-  "oversold_bounce_only_in_uptrend": {
-   "all": 0.565,
-   "last120": 0.558,
-   "last60": 0.533,
    "last20": 0.6
   },
-  "big_drop_reversal": {
-   "all": 0.565,
-   "last120": 0.517,
+  "trend_follow_ma20_ret1": {
+   "all": 0.567,
+   "last120": 0.525,
    "last60": 0.55,
-   "last20": 0.55
+   "last20": 0.6
+  },
+  "oversold_bounce_only_in_uptrend": {
+   "all": 0.567,
+   "last120": 0.558,
+   "last60": 0.533,
+   "last20": 0.65
+  },
+  "big_drop_reversal": {
+   "all": 0.567,
+   "last120": 0.525,
+   "last60": 0.55,
+   "last20": 0.6
   }
  },
- "base_up_rate": 0.55,
- "base_up_rate_last60": 0.517,
+ "base_up_rate": 0.548,
+ "base_up_rate_last60": 0.5,
  "buckets": {
   "above_ma20|ret5_neg|d1_down": {
    "n": 13,
@@ -114,7 +114,7 @@
    "up_rate": 0.375
   },
   "below_ma20|ret5_pos|d1_up": {
-   "n": 3,
+   "n": 4,
    "up_rate": 0.0
   }
  }
