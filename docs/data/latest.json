@@ -1,24 +1,24 @@
 {
-  "generated_at": "2026-11-20T02:58:54.784252+08:00",
-  "trade_date": "2026-11-19",
+  "generated_at": "2026-11-21T02:36:25.141077+08:00",
+  "trade_date": "2026-11-20",
   "source": "TWSE official RWD + OpenAPI",
   "data_status": {
     "state": "current",
-    "checked_at": "2026-11-20T02:58:54.784252+08:00",
+    "checked_at": "2026-11-21T02:36:25.141077+08:00",
     "message": "已取得當日官方收盤資料"
   },
   "market": {
-    "stocks": 1382,
-    "up": 132,
-    "down": 1205,
-    "unchanged": 45,
-    "turnover": 941113129774.0,
-    "turnover_billion": 9411.13129774,
+    "stocks": 1384,
+    "up": 39,
+    "down": 1314,
+    "unchanged": 31,
+    "turnover": 933975102074.0,
+    "turnover_billion": 9339.75102074,
     "index": {
-      "date": "2026-11-19",
-      "close": 38426.89,
-      "change": -1768.02,
-      "pct": -4.4
+      "date": "2026-11-20",
+      "close": 36033.29,
+      "change": -2393.6,
+      "pct": -6.23
     }
   },
   "trend": {
@@ -26,508 +26,501 @@
     "label": "稍偏空",
     "reasons": [
       "下跌家數明顯多於上漲家數",
-      "加權指數今日下跌 4.40%"
+      "加權指數今日下跌 6.23%"
     ]
   },
   "watchlist": [
     {
       "code": "0050",
       "name": "元大台灣50",
-      "close": 90.2,
-      "change": -3.9,
-      "pct": -4.1445270988310305,
-      "volume": 468405422.0,
-      "value": 42797615461.0
+      "close": 84.45,
+      "change": -5.75,
+      "pct": -6.3747228381374725,
+      "volume": 874056273.0,
+      "value": 74858941327.0
     },
     {
       "code": "2308",
       "name": "台達電",
-      "close": 1000.0,
-      "change": -60.0,
-      "pct": -5.660377358490567,
-      "volume": 29004072.0,
-      "value": 29795310365.0,
+      "close": 900.0,
+      "change": -100.0,
+      "pct": -10.0,
+      "volume": 20355632.0,
+      "value": 18493725448.0,
       "industry": "電子零組件業"
     },
     {
       "code": "2317",
       "name": "鴻海",
-      "close": 220.5,
-      "change": -0.5,
-      "pct": -0.22624434389140274,
-      "volume": 50876913.0,
-      "value": 11263207774.0,
+      "close": 210.0,
+      "change": -10.5,
+      "pct": -4.761904761904762,
+      "volume": 69153442.0,
+      "value": 14637730909.0,
       "industry": "其他電子業"
     },
     {
       "code": "2330",
       "name": "台積電",
-      "close": 2100.0,
-      "change": -75.0,
-      "pct": -3.4482758620689653,
-      "volume": 56582314.0,
-      "value": 120506549868.0,
+      "close": 2000.0,
+      "change": -100.0,
+      "pct": -4.761904761904762,
+      "volume": 88179393.0,
+      "value": 177284650683.0,
       "industry": "半導體業"
     },
     {
       "code": "2382",
       "name": "廣達",
-      "close": 262.5,
-      "change": -2.5,
-      "pct": -0.9433962264150944,
-      "volume": 11400738.0,
-      "value": 2991196787.0,
+      "close": 252.0,
+      "change": -10.5,
+      "pct": -4.0,
+      "volume": 17472187.0,
+      "value": 4387821205.0,
       "industry": "電腦及週邊設備業"
     },
     {
       "code": "2454",
       "name": "聯發科",
-      "close": 3720.0,
-      "change": -220.0,
-      "pct": -5.583756345177665,
-      "volume": 19612314.0,
-      "value": 74620538145.0,
+      "close": 3350.0,
+      "change": -370.0,
+      "pct": -9.946236559139784,
+      "volume": 19078661.0,
+      "value": 65431222990.0,
       "industry": "半導體業"
     }
   ],
   "gainers": [
     {
-      "code": "2923",
-      "name": "鼎固-KY",
-      "close": 34.95,
-      "change": 3.15,
-      "pct": 9.905660377358489,
-      "volume": 460691.0,
-      "value": 15719199.0,
-      "industry": "建材營造"
+      "code": "6614",
+      "name": "資拓宏宇",
+      "close": 40.7,
+      "change": 3.7,
+      "pct": 10.0,
+      "volume": 1796925.0,
+      "value": 69422197.0,
+      "industry": "數位雲端"
     },
     {
-      "code": "6782",
-      "name": "視陽",
-      "close": 290.5,
-      "change": 24.0,
-      "pct": 9.00562851782364,
-      "volume": 2160595.0,
-      "value": 629532149.0,
-      "industry": "生技醫療業"
+      "code": "2471",
+      "name": "資通",
+      "close": 62.8,
+      "change": 5.7,
+      "pct": 9.982486865148863,
+      "volume": 23101850.0,
+      "value": 1354958649.0,
+      "industry": "資訊服務業"
     },
     {
-      "code": "4807",
-      "name": "日成-KY",
-      "close": 37.0,
-      "change": 2.5,
-      "pct": 7.246376811594203,
-      "volume": 782112.0,
-      "value": 28426719.0,
-      "industry": "貿易百貨"
+      "code": "7765",
+      "name": "中華資安",
+      "close": 294.5,
+      "change": 26.5,
+      "pct": 9.888059701492537,
+      "volume": 8577705.0,
+      "value": 2402783242.0,
+      "industry": "數位雲端"
     },
     {
-      "code": "00875",
-      "name": "國泰網路資安",
-      "close": 60.2,
-      "change": 3.75,
-      "pct": 6.643046944198405,
-      "volume": 513048.0,
-      "value": 30838246.0
+      "code": "2468",
+      "name": "華經",
+      "close": 69.1,
+      "change": 6.2,
+      "pct": 9.856915739268683,
+      "volume": 88706129.0,
+      "value": 5687170061.0,
+      "industry": "資訊服務業"
     },
     {
-      "code": "8908",
-      "name": "欣雄",
-      "close": 41.2,
-      "change": 2.15,
-      "pct": 5.505761843790012,
-      "volume": 182835.0,
-      "value": 7201111.0,
-      "industry": "油電燃氣業"
-    },
-    {
-      "code": "5546",
-      "name": "永固-KY",
-      "close": 11.7,
-      "change": 0.55,
-      "pct": 4.9327354260089695,
-      "volume": 82949.0,
-      "value": 929359.0,
-      "industry": "建材營造"
-    },
-    {
-      "code": "1441",
-      "name": "大東",
-      "close": 8.99,
-      "change": 0.39,
-      "pct": 4.534883720930233,
-      "volume": 29665.0,
-      "value": 254950.0,
-      "industry": "紡織纖維"
-    },
-    {
-      "code": "00664R",
-      "name": "國泰臺灣加權反1",
-      "close": 1.88,
-      "change": 0.08,
-      "pct": 4.4444444444444455,
-      "volume": 77074468.0,
-      "value": 142530742.0
+      "code": "00686R",
+      "name": "群益臺灣加權反1",
+      "close": 1.24,
+      "change": 0.1,
+      "pct": 8.771929824561404,
+      "volume": 32900992.0,
+      "value": 39875594.0
     },
     {
       "code": "00676R",
       "name": "富邦臺灣加權反1",
-      "close": 6.43,
-      "change": 0.27,
-      "pct": 4.383116883116883,
-      "volume": 19237182.0,
-      "value": 121777953.0
+      "close": 6.91,
+      "change": 0.48,
+      "pct": 7.4650077760497675,
+      "volume": 24441508.0,
+      "value": 165612033.0
     },
     {
       "code": "00632R",
       "name": "元大台灣50反1",
-      "close": 11.68,
-      "change": 0.49,
-      "pct": 4.378909740840036,
-      "volume": 353304712.0,
-      "value": 4064242608.0
+      "close": 12.52,
+      "change": 0.84,
+      "pct": 7.191780821917808,
+      "volume": 579269687.0,
+      "value": 7112127823.0
+    },
+    {
+      "code": "00664R",
+      "name": "國泰臺灣加權反1",
+      "close": 2.01,
+      "change": 0.13,
+      "pct": 6.914893617021277,
+      "volume": 90838561.0,
+      "value": 179966206.0
+    },
+    {
+      "code": "00674R",
+      "name": "期元大S&P黃金反1",
+      "close": 34.77,
+      "change": 1.85,
+      "pct": 5.619684082624545,
+      "volume": 1960126.0,
+      "value": 67653161.0
+    },
+    {
+      "code": "2477",
+      "name": "美隆電",
+      "close": 21.3,
+      "change": 1.1,
+      "pct": 5.445544554455446,
+      "volume": 227410.0,
+      "value": 4435811.0,
+      "industry": "其他電子業"
     }
   ],
   "losers": [
     {
+      "code": "00675L",
+      "name": "富邦臺灣加權正2",
+      "close": 178.9,
+      "change": -30.75,
+      "pct": -14.66730264726926,
+      "volume": 8098010.0,
+      "value": 1504241013.0
+    },
+    {
+      "code": "00663L",
+      "name": "國泰臺灣加權正2",
+      "close": 59.3,
+      "change": -10.1,
+      "pct": -14.553314121037463,
+      "volume": 28437115.0,
+      "value": 1761354672.0
+    },
+    {
+      "code": "00685L",
+      "name": "群益臺灣加權正2",
+      "close": 6.8,
+      "change": -1.15,
+      "pct": -14.465408805031446,
+      "volume": 1456338287.0,
+      "value": 10299796125.0
+    },
+    {
       "code": "02001L",
       "name": "富邦蘋果正二N",
-      "close": 67.75,
-      "change": -9.5,
-      "pct": -12.297734627831716,
-      "volume": 206000.0,
-      "value": 14494600.0
+      "close": 58.0,
+      "change": -9.75,
+      "pct": -14.391143911439114,
+      "volume": 427000.0,
+      "value": 25484500.0
     },
     {
-      "code": "2485",
-      "name": "兆赫",
-      "close": 26.55,
-      "change": -2.95,
-      "pct": -10.0,
-      "volume": 3532943.0,
-      "value": 96174822.0,
-      "industry": "通信網路業"
+      "code": "00631L",
+      "name": "元大台灣50正2",
+      "close": 21.24,
+      "change": -3.33,
+      "pct": -13.553113553113553,
+      "volume": 1300766332.0,
+      "value": 28747502962.0
     },
     {
-      "code": "2911",
-      "name": "麗嬰房",
-      "close": 5.22,
-      "change": -0.58,
-      "pct": -10.0,
-      "volume": 252439.0,
-      "value": 1348647.0,
-      "industry": "貿易百貨"
+      "code": "00708L",
+      "name": "期元大S&P黃金正2",
+      "close": 50.35,
+      "change": -6.4,
+      "pct": -11.277533039647578,
+      "volume": 12045541.0,
+      "value": 620510282.0
     },
     {
-      "code": "3406",
-      "name": "玉晶光",
-      "close": 720.0,
-      "change": -80.0,
+      "code": "2308",
+      "name": "台達電",
+      "close": 900.0,
+      "change": -100.0,
       "pct": -10.0,
-      "volume": 3488396.0,
-      "value": 2585500592.0,
-      "industry": "光電業"
-    },
-    {
-      "code": "3535",
-      "name": "晶彩科",
-      "close": 59.4,
-      "change": -6.6,
-      "pct": -10.0,
-      "volume": 1103894.0,
-      "value": 66919797.0,
-      "industry": "光電業"
-    },
-    {
-      "code": "3593",
-      "name": "力銘",
-      "close": 7.74,
-      "change": -0.86,
-      "pct": -10.0,
-      "volume": 20000.0,
-      "value": 154775.0,
+      "volume": 20355632.0,
+      "value": 18493725448.0,
       "industry": "電子零組件業"
     },
     {
-      "code": "3715",
-      "name": "定穎投控",
-      "close": 126.0,
-      "change": -14.0,
+      "code": "2360",
+      "name": "致茂",
+      "close": 927.0,
+      "change": -103.0,
       "pct": -10.0,
-      "volume": 16054886.0,
-      "value": 2099335288.0,
+      "volume": 1767998.0,
+      "value": 1646973776.0,
+      "industry": "其他電子業"
+    },
+    {
+      "code": "2368",
+      "name": "金像電",
+      "close": 711.0,
+      "change": -79.0,
+      "pct": -10.0,
+      "volume": 3623221.0,
+      "value": 2579046620.0,
       "industry": "電子零組件業"
     },
     {
-      "code": "4916",
-      "name": "事欣科",
-      "close": 99.9,
-      "change": -11.1,
+      "code": "2413",
+      "name": "環科",
+      "close": 43.2,
+      "change": -4.8,
       "pct": -10.0,
-      "volume": 12438722.0,
-      "value": 1294147904.0,
-      "industry": "電腦及週邊設備業"
-    },
-    {
-      "code": "4989",
-      "name": "榮科",
-      "close": 45.45,
-      "change": -5.05,
-      "pct": -10.0,
-      "volume": 4316196.0,
-      "value": 200193932.0,
+      "volume": 1883054.0,
+      "value": 82202098.0,
       "industry": "電子零組件業"
-    },
-    {
-      "code": "5243",
-      "name": "乙盛-KY",
-      "close": 72.0,
-      "change": -8.0,
-      "pct": -10.0,
-      "volume": 7009678.0,
-      "value": 518453106.0,
-      "industry": "光電業"
     }
   ],
   "active": [
     {
       "code": "2330",
       "name": "台積電",
-      "close": 2100.0,
-      "change": -75.0,
-      "pct": -3.4482758620689653,
-      "volume": 56582314.0,
-      "value": 120506549868.0,
+      "close": 2000.0,
+      "change": -100.0,
+      "pct": -4.761904761904762,
+      "volume": 88179393.0,
+      "value": 177284650683.0,
       "industry": "半導體業"
+    },
+    {
+      "code": "0050",
+      "name": "元大台灣50",
+      "close": 84.45,
+      "change": -5.75,
+      "pct": -6.3747228381374725,
+      "volume": 874056273.0,
+      "value": 74858941327.0
     },
     {
       "code": "2454",
       "name": "聯發科",
-      "close": 3720.0,
-      "change": -220.0,
-      "pct": -5.583756345177665,
-      "volume": 19612314.0,
-      "value": 74620538145.0,
-      "industry": "半導體業"
-    },
-    {
-      "code": "0050",
-      "name": "元大台灣50",
-      "close": 90.2,
-      "change": -3.9,
-      "pct": -4.1445270988310305,
-      "volume": 468405422.0,
-      "value": 42797615461.0
-    },
-    {
-      "code": "2308",
-      "name": "台達電",
-      "close": 1000.0,
-      "change": -60.0,
-      "pct": -5.660377358490567,
-      "volume": 29004072.0,
-      "value": 29795310365.0,
-      "industry": "電子零組件業"
-    },
-    {
-      "code": "3661",
-      "name": "世芯-KY",
-      "close": 3600.0,
-      "change": -350.0,
-      "pct": -8.860759493670885,
-      "volume": 6002494.0,
-      "value": 22656590920.0,
+      "close": 3350.0,
+      "change": -370.0,
+      "pct": -9.946236559139784,
+      "volume": 19078661.0,
+      "value": 65431222990.0,
       "industry": "半導體業"
     },
     {
       "code": "00631L",
       "name": "元大台灣50正2",
-      "close": 24.57,
-      "change": -2.27,
-      "pct": -8.4575260804769,
-      "volume": 865454264.0,
-      "value": 21986252409.0
+      "close": 21.24,
+      "change": -3.33,
+      "pct": -13.553113553113553,
+      "volume": 1300766332.0,
+      "value": 28747502962.0
     },
     {
       "code": "2327",
       "name": "國巨*",
-      "close": 322.5,
-      "change": -29.5,
-      "pct": -8.380681818181818,
-      "volume": 61486056.0,
-      "value": 20164324380.0,
+      "close": 296.0,
+      "change": -26.5,
+      "pct": -8.217054263565892,
+      "volume": 69774078.0,
+      "value": 21053043126.0,
       "industry": "電子零組件業"
-    },
-    {
-      "code": "2408",
-      "name": "南亞科",
-      "close": 293.5,
-      "change": -31.5,
-      "pct": -9.692307692307692,
-      "volume": 62529494.0,
-      "value": 18793691442.0,
-      "industry": "半導體業"
-    },
-    {
-      "code": "3711",
-      "name": "日月光投控",
-      "close": 504.0,
-      "change": -44.0,
-      "pct": -8.02919708029197,
-      "volume": 30144326.0,
-      "value": 15557132389.0,
-      "industry": "半導體業"
-    },
-    {
-      "code": "1303",
-      "name": "南亞",
-      "close": 228.5,
-      "change": -25.0,
-      "pct": -9.861932938856016,
-      "volume": 58806420.0,
-      "value": 13705145161.0,
-      "industry": "塑膠工業"
-    }
-  ],
-  "stocks": [
-    {
-      "code": "00406A",
-      "name": "主動中信台灣收益",
-      "close": 6.37,
-      "change": -0.48,
-      "pct": -7.007299270072993,
-      "volume": 1543452105.0,
-      "value": 10061707263.0
-    },
-    {
-      "code": "00685L",
-      "name": "群益臺灣加權正2",
-      "close": 7.95,
-      "change": -0.77,
-      "pct": -8.830275229357799,
-      "volume": 996847468.0,
-      "value": 8163854020.0
-    },
-    {
-      "code": "00631L",
-      "name": "元大台灣50正2",
-      "close": 24.57,
-      "change": -2.27,
-      "pct": -8.4575260804769,
-      "volume": 865454264.0,
-      "value": 21986252409.0
-    },
-    {
-      "code": "00981A",
-      "name": "主動統一台股增長",
-      "close": 20.23,
-      "change": -1.82,
-      "pct": -8.253968253968253,
-      "volume": 486349770.0,
-      "value": 10100752274.0
-    },
-    {
-      "code": "0050",
-      "name": "元大台灣50",
-      "close": 90.2,
-      "change": -3.9,
-      "pct": -4.1445270988310305,
-      "volume": 468405422.0,
-      "value": 42797615461.0
-    },
-    {
-      "code": "00632R",
-      "name": "元大台灣50反1",
-      "close": 11.68,
-      "change": 0.49,
-      "pct": 4.378909740840036,
-      "volume": 353304712.0,
-      "value": 4064242608.0
-    },
-    {
-      "code": "009816",
-      "name": "凱基台灣TOP50",
-      "close": 13.5,
-      "change": -0.54,
-      "pct": -3.8461538461538463,
-      "volume": 296337232.0,
-      "value": 4047330886.0
-    },
-    {
-      "code": "00403A",
-      "name": "主動統一升級50",
-      "close": 7.54,
-      "change": -0.54,
-      "pct": -6.683168316831684,
-      "volume": 265540832.0,
-      "value": 2042979539.0
-    },
-    {
-      "code": "2409",
-      "name": "友達",
-      "close": 25.1,
-      "change": -2.3,
-      "pct": -8.394160583941604,
-      "volume": 220887248.0,
-      "value": 5766931763.0,
-      "industry": "光電業"
-    },
-    {
-      "code": "3481",
-      "name": "群創",
-      "close": 32.95,
-      "change": -3.6,
-      "pct": -9.849521203830367,
-      "volume": 187710084.0,
-      "value": 6373548487.0,
-      "industry": "光電業"
-    },
-    {
-      "code": "00991A",
-      "name": "主動復華未來50",
-      "close": 11.4,
-      "change": -1.21,
-      "pct": -9.595559080095164,
-      "volume": 154840692.0,
-      "value": 1815082513.0
     },
     {
       "code": "2303",
       "name": "聯電",
-      "close": 88.2,
-      "change": -4.8,
-      "pct": -5.161290322580645,
-      "volume": 135913190.0,
-      "value": 12202868439.0,
+      "close": 80.3,
+      "change": -7.9,
+      "pct": -8.956916099773244,
+      "volume": 232408954.0,
+      "value": 18810071998.0,
       "industry": "半導體業"
     },
     {
-      "code": "00992A",
-      "name": "主動群益科技創新",
-      "close": 11.65,
-      "change": -1.2,
-      "pct": -9.33852140077821,
-      "volume": 127699263.0,
-      "value": 1531424876.0
+      "code": "2308",
+      "name": "台達電",
+      "close": 900.0,
+      "change": -100.0,
+      "pct": -10.0,
+      "volume": 20355632.0,
+      "value": 18493725448.0,
+      "industry": "電子零組件業"
     },
     {
-      "code": "1802",
-      "name": "台玻",
-      "close": 58.7,
-      "change": -6.5,
-      "pct": -9.969325153374232,
-      "volume": 123828413.0,
-      "value": 7458151371.0,
-      "industry": "玻璃陶瓷"
+      "code": "3711",
+      "name": "日月光投控",
+      "close": 457.0,
+      "change": -47.0,
+      "pct": -9.325396825396826,
+      "volume": 35944431.0,
+      "value": 16691382806.0,
+      "industry": "半導體業"
+    },
+    {
+      "code": "2408",
+      "name": "南亞科",
+      "close": 264.5,
+      "change": -29.0,
+      "pct": -9.880749574105621,
+      "volume": 60059145.0,
+      "value": 16179245421.0,
+      "industry": "半導體業"
+    },
+    {
+      "code": "2317",
+      "name": "鴻海",
+      "close": 210.0,
+      "change": -10.5,
+      "pct": -4.761904761904762,
+      "volume": 69153442.0,
+      "value": 14637730909.0,
+      "industry": "其他電子業"
+    }
+  ],
+  "stocks": [
+    {
+      "code": "00685L",
+      "name": "群益臺灣加權正2",
+      "close": 6.8,
+      "change": -1.15,
+      "pct": -14.465408805031446,
+      "volume": 1456338287.0,
+      "value": 10299796125.0
+    },
+    {
+      "code": "00406A",
+      "name": "主動中信台灣收益",
+      "close": 5.87,
+      "change": -0.5,
+      "pct": -7.849293563579278,
+      "volume": 1401612317.0,
+      "value": 8350741197.0
+    },
+    {
+      "code": "00631L",
+      "name": "元大台灣50正2",
+      "close": 21.24,
+      "change": -3.33,
+      "pct": -13.553113553113553,
+      "volume": 1300766332.0,
+      "value": 28747502962.0
+    },
+    {
+      "code": "0050",
+      "name": "元大台灣50",
+      "close": 84.45,
+      "change": -5.75,
+      "pct": -6.3747228381374725,
+      "volume": 874056273.0,
+      "value": 74858941327.0
+    },
+    {
+      "code": "00632R",
+      "name": "元大台灣50反1",
+      "close": 12.52,
+      "change": 0.84,
+      "pct": 7.191780821917808,
+      "volume": 579269687.0,
+      "value": 7112127823.0
+    },
+    {
+      "code": "009816",
+      "name": "凱基台灣TOP50",
+      "close": 12.6,
+      "change": -0.9,
+      "pct": -6.666666666666667,
+      "volume": 456406703.0,
+      "value": 5841683617.0
+    },
+    {
+      "code": "00981A",
+      "name": "主動統一台股增長",
+      "close": 18.58,
+      "change": -1.65,
+      "pct": -8.156203657933762,
+      "volume": 444409688.0,
+      "value": 8391147859.0
+    },
+    {
+      "code": "2409",
+      "name": "友達",
+      "close": 23.25,
+      "change": -1.85,
+      "pct": -7.370517928286853,
+      "volume": 250305555.0,
+      "value": 5895012566.0,
+      "industry": "光電業"
+    },
+    {
+      "code": "2303",
+      "name": "聯電",
+      "close": 80.3,
+      "change": -7.9,
+      "pct": -8.956916099773244,
+      "volume": 232408954.0,
+      "value": 18810071998.0,
+      "industry": "半導體業"
+    },
+    {
+      "code": "00919",
+      "name": "群益台灣精選高息",
+      "close": 27.49,
+      "change": -1.66,
+      "pct": -5.694682675814752,
+      "volume": 211227941.0,
+      "value": 5887779156.0
+    },
+    {
+      "code": "00403A",
+      "name": "主動統一升級50",
+      "close": 7.02,
+      "change": -0.52,
+      "pct": -6.896551724137932,
+      "volume": 207043470.0,
+      "value": 1465724820.0
+    },
+    {
+      "code": "3481",
+      "name": "群創",
+      "close": 29.95,
+      "change": -3.0,
+      "pct": -9.104704097116842,
+      "volume": 204121261.0,
+      "value": 6178917883.0,
+      "industry": "光電業"
     },
     {
       "code": "0056",
       "name": "元大高股息",
-      "close": 47.41,
-      "change": -2.07,
-      "pct": -4.1835084882780915,
-      "volume": 119522239.0,
-      "value": 5728149240.0
+      "close": 44.31,
+      "change": -3.1,
+      "pct": -6.538704914574985,
+      "volume": 188190001.0,
+      "value": 8474401304.0
+    },
+    {
+      "code": "00878",
+      "name": "國泰永續高股息",
+      "close": 28.03,
+      "change": -1.75,
+      "pct": -5.876427132303559,
+      "volume": 174330293.0,
+      "value": 4951558372.0
+    },
+    {
+      "code": "00991A",
+      "name": "主動復華未來50",
+      "close": 10.27,
+      "change": -1.13,
+      "pct": -9.912280701754387,
+      "volume": 149610970.0,
+      "value": 1581088792.0
     }
   ],
   "etf_count": 245,
@@ -535,568 +528,568 @@
     {
       "code": "0050",
       "name": "元大台灣50",
-      "close": 90.2,
-      "change": -3.9,
-      "pct": -4.1445270988310305,
-      "volume": 468405422.0,
-      "value": 42797615461.0,
+      "close": 84.45,
+      "change": -5.75,
+      "pct": -6.3747228381374725,
+      "volume": 874056273.0,
+      "value": 74858941327.0,
       "is_positive2": false,
       "is_inverse": false
     },
     {
       "code": "00631L",
       "name": "元大台灣50正2",
-      "close": 24.57,
-      "change": -2.27,
-      "pct": -8.4575260804769,
-      "volume": 865454264.0,
-      "value": 21986252409.0,
+      "close": 21.24,
+      "change": -3.33,
+      "pct": -13.553113553113553,
+      "volume": 1300766332.0,
+      "value": 28747502962.0,
       "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00981A",
-      "name": "主動統一台股增長",
-      "close": 20.23,
-      "change": -1.82,
-      "pct": -8.253968253968253,
-      "volume": 486349770.0,
-      "value": 10100752274.0,
-      "is_positive2": false,
-      "is_inverse": false
-    },
-    {
-      "code": "00406A",
-      "name": "主動中信台灣收益",
-      "close": 6.37,
-      "change": -0.48,
-      "pct": -7.007299270072993,
-      "volume": 1543452105.0,
-      "value": 10061707263.0,
-      "is_positive2": false,
       "is_inverse": false
     },
     {
       "code": "00685L",
       "name": "群益臺灣加權正2",
-      "close": 7.95,
-      "change": -0.77,
-      "pct": -8.830275229357799,
-      "volume": 996847468.0,
-      "value": 8163854020.0,
+      "close": 6.8,
+      "change": -1.15,
+      "pct": -14.465408805031446,
+      "volume": 1456338287.0,
+      "value": 10299796125.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "0056",
       "name": "元大高股息",
-      "close": 47.41,
-      "change": -2.07,
-      "pct": -4.1835084882780915,
-      "volume": 119522239.0,
-      "value": 5728149240.0,
+      "close": 44.31,
+      "change": -3.1,
+      "pct": -6.538704914574985,
+      "volume": 188190001.0,
+      "value": 8474401304.0,
+      "is_positive2": false,
+      "is_inverse": false
+    },
+    {
+      "code": "00981A",
+      "name": "主動統一台股增長",
+      "close": 18.58,
+      "change": -1.65,
+      "pct": -8.156203657933762,
+      "volume": 444409688.0,
+      "value": 8391147859.0,
+      "is_positive2": false,
+      "is_inverse": false
+    },
+    {
+      "code": "00406A",
+      "name": "主動中信台灣收益",
+      "close": 5.87,
+      "change": -0.5,
+      "pct": -7.849293563579278,
+      "volume": 1401612317.0,
+      "value": 8350741197.0,
       "is_positive2": false,
       "is_inverse": false
     },
     {
       "code": "00632R",
       "name": "元大台灣50反1",
-      "close": 11.68,
-      "change": 0.49,
-      "pct": 4.378909740840036,
-      "volume": 353304712.0,
-      "value": 4064242608.0,
+      "close": 12.52,
+      "change": 0.84,
+      "pct": 7.191780821917808,
+      "volume": 579269687.0,
+      "value": 7112127823.0,
       "is_positive2": false,
       "is_inverse": true
     },
     {
-      "code": "009816",
-      "name": "凱基台灣TOP50",
-      "close": 13.5,
-      "change": -0.54,
-      "pct": -3.8461538461538463,
-      "volume": 296337232.0,
-      "value": 4047330886.0,
+      "code": "00919",
+      "name": "群益台灣精選高息",
+      "close": 27.49,
+      "change": -1.66,
+      "pct": -5.694682675814752,
+      "volume": 211227941.0,
+      "value": 5887779156.0,
       "is_positive2": false,
       "is_inverse": false
     },
     {
-      "code": "00919",
-      "name": "群益台灣精選高息",
-      "close": 29.15,
-      "change": -0.84,
-      "pct": -2.800933644548183,
-      "volume": 114627734.0,
-      "value": 3365834651.0,
+      "code": "009816",
+      "name": "凱基台灣TOP50",
+      "close": 12.6,
+      "change": -0.9,
+      "pct": -6.666666666666667,
+      "volume": 456406703.0,
+      "value": 5841683617.0,
       "is_positive2": false,
       "is_inverse": false
     },
     {
       "code": "00878",
       "name": "國泰永續高股息",
-      "close": 29.78,
-      "change": -0.87,
-      "pct": -2.8384991843393146,
-      "volume": 100256921.0,
-      "value": 3012715537.0,
+      "close": 28.03,
+      "change": -1.75,
+      "pct": -5.876427132303559,
+      "volume": 174330293.0,
+      "value": 4951558372.0,
       "is_positive2": false,
       "is_inverse": false
     }
   ],
   "etf_gainers": [
     {
-      "code": "00875",
-      "name": "國泰網路資安ETF",
-      "close": 60.2,
-      "change": 3.75,
-      "pct": 6.643046944198405,
-      "volume": 513048.0,
-      "value": 30838246.0,
-      "is_positive2": false,
-      "is_inverse": false
-    },
-    {
-      "code": "00664R",
-      "name": "國泰臺灣加權反1",
-      "close": 1.88,
-      "change": 0.08,
-      "pct": 4.4444444444444455,
-      "volume": 77074468.0,
-      "value": 142530742.0,
+      "code": "00686R",
+      "name": "群益臺灣加權反1",
+      "close": 1.24,
+      "change": 0.1,
+      "pct": 8.771929824561404,
+      "volume": 32900992.0,
+      "value": 39875594.0,
       "is_positive2": false,
       "is_inverse": true
     },
     {
       "code": "00676R",
       "name": "富邦臺灣加權反1",
-      "close": 6.43,
-      "change": 0.27,
-      "pct": 4.383116883116883,
-      "volume": 19237182.0,
-      "value": 121777953.0,
+      "close": 6.91,
+      "change": 0.48,
+      "pct": 7.4650077760497675,
+      "volume": 24441508.0,
+      "value": 165612033.0,
       "is_positive2": false,
       "is_inverse": true
     },
     {
       "code": "00632R",
       "name": "元大台灣50反1",
-      "close": 11.68,
-      "change": 0.49,
-      "pct": 4.378909740840036,
-      "volume": 353304712.0,
-      "value": 4064242608.0,
+      "close": 12.52,
+      "change": 0.84,
+      "pct": 7.191780821917808,
+      "volume": 579269687.0,
+      "value": 7112127823.0,
       "is_positive2": false,
       "is_inverse": true
     },
     {
-      "code": "00686R",
-      "name": "群益臺灣加權反1",
-      "close": 1.14,
-      "change": 0.04,
-      "pct": 3.6363636363636367,
-      "volume": 21274159.0,
-      "value": 24164758.0,
-      "is_positive2": false,
-      "is_inverse": true
-    },
-    {
-      "code": "00673R",
-      "name": "期元大S&amp;P原油反1(原名：元大S&amp;P原油反1)",
-      "close": 11.41,
-      "change": 0.21,
-      "pct": 1.875,
-      "volume": 46752663.0,
-      "value": 533129742.0,
-      "is_positive2": false,
-      "is_inverse": true
-    },
-    {
-      "code": "00989A",
-      "name": "主動摩根美國科技",
-      "close": 15.42,
-      "change": 0.25,
-      "pct": 1.6479894528675016,
-      "volume": 1966647.0,
-      "value": 30335821.0,
-      "is_positive2": false,
-      "is_inverse": false
-    },
-    {
-      "code": "00666R",
-      "name": "富邦恒生國企反1",
-      "close": 9.91,
-      "change": 0.16,
-      "pct": 1.641025641025641,
-      "volume": 64319.0,
-      "value": 636031.0,
-      "is_positive2": false,
-      "is_inverse": true
-    },
-    {
-      "code": "00651R",
-      "name": "復華香港反1",
-      "close": 5.69,
-      "change": 0.09,
-      "pct": 1.607142857142857,
-      "volume": 1174463.0,
-      "value": 6677456.0,
+      "code": "00664R",
+      "name": "國泰臺灣加權反1",
+      "close": 2.01,
+      "change": 0.13,
+      "pct": 6.914893617021277,
+      "volume": 90838561.0,
+      "value": 179966206.0,
       "is_positive2": false,
       "is_inverse": true
     },
     {
       "code": "00674R",
       "name": "期元大S&amp;P黃金反1(原名：元大S&amp;P黃金反1)",
-      "close": 32.92,
-      "change": 0.51,
-      "pct": 1.5735883986423942,
-      "volume": 897280.0,
-      "value": 29535722.0,
+      "close": 34.77,
+      "change": 1.85,
+      "pct": 5.619684082624545,
+      "volume": 1960126.0,
+      "value": 67653161.0,
+      "is_positive2": false,
+      "is_inverse": true
+    },
+    {
+      "code": "00671R",
+      "name": "富邦NASDAQ 反1",
+      "close": 2.7,
+      "change": 0.09,
+      "pct": 3.448275862068965,
+      "volume": 15100113.0,
+      "value": 40751141.0,
+      "is_positive2": false,
+      "is_inverse": true
+    },
+    {
+      "code": "00648R",
+      "name": "元大S&amp;P500反1",
+      "close": 4.27,
+      "change": 0.14,
+      "pct": 3.389830508474577,
+      "volume": 8794556.0,
+      "value": 37410919.0,
+      "is_positive2": false,
+      "is_inverse": true
+    },
+    {
+      "code": "00641R",
+      "name": "富邦日本反1",
+      "close": 4.01,
+      "change": 0.13,
+      "pct": 3.350515463917526,
+      "volume": 3584445.0,
+      "value": 14290243.0,
+      "is_positive2": false,
+      "is_inverse": true
+    },
+    {
+      "code": "00669R",
+      "name": "國泰美國道瓊反1",
+      "close": 5.73,
+      "change": 0.14,
+      "pct": 2.504472271914132,
+      "volume": 3694606.0,
+      "value": 21169922.0,
+      "is_positive2": false,
+      "is_inverse": true
+    },
+    {
+      "code": "00651R",
+      "name": "復華香港反1",
+      "close": 5.82,
+      "change": 0.13,
+      "pct": 2.2847100175746924,
+      "volume": 973658.0,
+      "value": 5636633.0,
       "is_positive2": false,
       "is_inverse": true
     }
   ],
   "etf_losers": [
     {
-      "code": "00991A",
-      "name": "主動復華未來50",
-      "close": 11.4,
-      "change": -1.21,
-      "pct": -9.595559080095164,
-      "volume": 154840692.0,
-      "value": 1815082513.0,
-      "is_positive2": false,
-      "is_inverse": false
-    },
-    {
-      "code": "00992A",
-      "name": "主動群益科技創新",
-      "close": 11.65,
-      "change": -1.2,
-      "pct": -9.33852140077821,
-      "volume": 127699263.0,
-      "value": 1531424876.0,
-      "is_positive2": false,
-      "is_inverse": false
-    },
-    {
-      "code": "00418A",
-      "name": "主動復華台灣新星",
-      "close": 7.96,
-      "change": -0.81,
-      "pct": -9.236031927023946,
-      "volume": 43136360.0,
-      "value": 351784802.0,
-      "is_positive2": false,
-      "is_inverse": false
-    },
-    {
-      "code": "00987A",
-      "name": "主動台新優勢成長",
-      "close": 11.33,
-      "change": -1.12,
-      "pct": -8.995983935742974,
-      "volume": 4917582.0,
-      "value": 56453457.0,
-      "is_positive2": false,
-      "is_inverse": false
-    },
-    {
-      "code": "00416A",
-      "name": "主動台新臺灣中小",
-      "close": 7.34,
-      "change": -0.72,
-      "pct": -8.933002481389577,
-      "volume": 20852795.0,
-      "value": 156382964.0,
-      "is_positive2": false,
-      "is_inverse": false
-    },
-    {
-      "code": "00685L",
-      "name": "群益臺灣加權正2",
-      "close": 7.95,
-      "change": -0.77,
-      "pct": -8.830275229357799,
-      "volume": 996847468.0,
-      "value": 8163854020.0,
+      "code": "00675L",
+      "name": "FB臺灣加權正2",
+      "close": 178.9,
+      "change": -30.75,
+      "pct": -14.66730264726926,
+      "volume": 8098010.0,
+      "value": 1504241013.0,
       "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "009828",
-      "name": "中信台日韓PCB",
-      "close": 6.3,
-      "change": -0.61,
-      "pct": -8.827785817655572,
-      "volume": 65498510.0,
-      "value": 421933784.0,
-      "is_positive2": false,
-      "is_inverse": false
-    },
-    {
-      "code": "00993A",
-      "name": "主動安聯台灣",
-      "close": 8.84,
-      "change": -0.85,
-      "pct": -8.771929824561404,
-      "volume": 7719799.0,
-      "value": 69702315.0,
-      "is_positive2": false,
       "is_inverse": false
     },
     {
       "code": "00663L",
       "name": "國泰臺灣加權正2",
-      "close": 69.4,
-      "change": -6.6,
-      "pct": -8.68421052631579,
-      "volume": 21893032.0,
-      "value": 1566831634.0,
+      "close": 59.3,
+      "change": -10.1,
+      "pct": -14.553314121037463,
+      "volume": 28437115.0,
+      "value": 1761354672.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
-      "code": "00675L",
-      "name": "FB臺灣加權正2",
-      "close": 209.65,
-      "change": -19.5,
-      "pct": -8.509709797076152,
-      "volume": 4144118.0,
-      "value": 893612987.0,
-      "is_positive2": true,
-      "is_inverse": false
-    }
-  ],
-  "positive2_count": 21,
-  "positive2_rank": [
-    {
-      "code": "00688L",
-      "name": "國泰20年美債正2",
-      "close": 6.16,
-      "change": 0.09,
-      "pct": 1.4827018121911035,
-      "volume": 6972835.0,
-      "value": 42862633.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00670L",
-      "name": "富邦NASDAQ正2",
-      "close": 166.75,
-      "change": 2.4,
-      "pct": 1.4602981442044418,
-      "volume": 1038857.0,
-      "value": 172885357.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00680L",
-      "name": "元大美債20正2",
-      "close": 6.17,
-      "change": 0.07,
-      "pct": 1.1475409836065575,
-      "volume": 10004754.0,
-      "value": 61684636.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00653L",
-      "name": "富邦印度正2",
-      "close": 50.65,
-      "change": 0.35,
-      "pct": 0.6958250497017893,
-      "volume": 333234.0,
-      "value": 16770499.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00683L",
-      "name": "期元大美元指正2(原名：元大美元指數正2)",
-      "close": 23.56,
-      "change": 0.12,
-      "pct": 0.5119453924914676,
-      "volume": 34262.0,
-      "value": 806225.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00647L",
-      "name": "元大S&amp;P500正2",
-      "close": 128.7,
-      "change": -0.1,
-      "pct": -0.07763975155279505,
-      "volume": 58245.0,
-      "value": 7491675.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00655L",
-      "name": "國泰中國A50正2",
-      "close": 26.24,
-      "change": -0.08,
-      "pct": -0.30395136778115506,
-      "volume": 1793988.0,
-      "value": 46741722.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00706L",
-      "name": "期元大S&amp;P日圓正2(原名：元大S&amp;P日圓正2)",
-      "close": 18.62,
-      "change": -0.08,
-      "pct": -0.42780748663101603,
-      "volume": 1258244.0,
-      "value": 23448936.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00637L",
-      "name": "元大滬深300正2",
-      "close": 15.71,
-      "change": -0.07,
-      "pct": -0.4435994930291508,
-      "volume": 23063309.0,
-      "value": 360068794.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00633L",
-      "name": "富邦上証正2",
-      "close": 37.56,
-      "change": -0.18,
-      "pct": -0.47694753577106513,
-      "volume": 1664960.0,
-      "value": 61999073.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00640L",
-      "name": "富邦日本正2",
-      "close": 93.5,
-      "change": -0.75,
-      "pct": -0.7957559681697612,
-      "volume": 66240.0,
-      "value": 6188443.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00715L",
-      "name": "期街口布蘭特正2",
-      "close": 59.75,
-      "change": -0.85,
-      "pct": -1.4026402640264026,
-      "volume": 1230392.0,
-      "value": 73478516.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00852L",
-      "name": "國泰美國道瓊正2",
-      "close": 31.55,
-      "change": -0.52,
-      "pct": -1.6214530714062987,
-      "volume": 82617.0,
-      "value": 2605586.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00708L",
-      "name": "期元大S&amp;P黃金正2(原名：元大S&amp;P黃金正2)",
-      "close": 56.75,
-      "change": -1.85,
-      "pct": -3.1569965870307164,
-      "volume": 6549404.0,
-      "value": 371682839.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00665L",
-      "name": "富邦恒生國企正2",
-      "close": 7.92,
-      "change": -0.28,
-      "pct": -3.4146341463414642,
-      "volume": 10312650.0,
-      "value": 82365047.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00650L",
-      "name": "復華香港正2",
-      "close": 14.09,
-      "change": -0.54,
-      "pct": -3.6910457963089547,
-      "volume": 4940925.0,
-      "value": 70297621.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00753L",
-      "name": "中信中國50正2",
-      "close": 7.07,
-      "change": -0.38,
-      "pct": -5.100671140939597,
-      "volume": 17816533.0,
-      "value": 127420407.0,
+      "code": "00685L",
+      "name": "群益臺灣加權正2",
+      "close": 6.8,
+      "change": -1.15,
+      "pct": -14.465408805031446,
+      "volume": 1456338287.0,
+      "value": 10299796125.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00631L",
       "name": "元大台灣50正2",
-      "close": 24.57,
-      "change": -2.27,
-      "pct": -8.4575260804769,
-      "volume": 865454264.0,
-      "value": 21986252409.0,
+      "close": 21.24,
+      "change": -3.33,
+      "pct": -13.553113553113553,
+      "volume": 1300766332.0,
+      "value": 28747502962.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
-      "code": "00675L",
-      "name": "FB臺灣加權正2",
-      "close": 209.65,
-      "change": -19.5,
-      "pct": -8.509709797076152,
-      "volume": 4144118.0,
-      "value": 893612987.0,
+      "code": "00708L",
+      "name": "期元大S&amp;P黃金正2(原名：元大S&amp;P黃金正2)",
+      "close": 50.35,
+      "change": -6.4,
+      "pct": -11.277533039647578,
+      "volume": 12045541.0,
+      "value": 620510282.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
-      "code": "00663L",
-      "name": "國泰臺灣加權正2",
-      "close": 69.4,
-      "change": -6.6,
-      "pct": -8.68421052631579,
-      "volume": 21893032.0,
-      "value": 1566831634.0,
+      "code": "00991A",
+      "name": "主動復華未來50",
+      "close": 10.27,
+      "change": -1.13,
+      "pct": -9.912280701754387,
+      "volume": 149610970.0,
+      "value": 1581088792.0,
+      "is_positive2": false,
+      "is_inverse": false
+    },
+    {
+      "code": "00947",
+      "name": "台新臺灣IC設計動能ETF基金",
+      "close": 23.17,
+      "change": -2.48,
+      "pct": -9.668615984405458,
+      "volume": 16747310.0,
+      "value": 396514203.0,
+      "is_positive2": false,
+      "is_inverse": false
+    },
+    {
+      "code": "00992A",
+      "name": "主動群益科技創新",
+      "close": 10.56,
+      "change": -1.09,
+      "pct": -9.356223175965665,
+      "volume": 107575035.0,
+      "value": 1155819898.0,
+      "is_positive2": false,
+      "is_inverse": false
+    },
+    {
+      "code": "00418A",
+      "name": "主動復華台灣新星",
+      "close": 7.23,
+      "change": -0.73,
+      "pct": -9.170854271356783,
+      "volume": 44684981.0,
+      "value": 326759120.0,
+      "is_positive2": false,
+      "is_inverse": false
+    },
+    {
+      "code": "00415A",
+      "name": "主動群益核心50",
+      "close": 5.9,
+      "change": -0.58,
+      "pct": -8.950617283950615,
+      "volume": 51981252.0,
+      "value": 311207152.0,
+      "is_positive2": false,
+      "is_inverse": false
+    }
+  ],
+  "positive2_count": 21,
+  "positive2_rank": [
+    {
+      "code": "00653L",
+      "name": "富邦印度正2",
+      "close": 51.5,
+      "change": 0.85,
+      "pct": 1.678183613030602,
+      "volume": 518297.0,
+      "value": 26445370.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00715L",
+      "name": "期街口布蘭特正2",
+      "close": 60.6,
+      "change": 0.85,
+      "pct": 1.4225941422594142,
+      "volume": 1952912.0,
+      "value": 118074491.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00688L",
+      "name": "國泰20年美債正2",
+      "close": 6.2,
+      "change": 0.04,
+      "pct": 0.6493506493506493,
+      "volume": 12213586.0,
+      "value": 75640046.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00680L",
+      "name": "元大美債20正2",
+      "close": 6.21,
+      "change": 0.04,
+      "pct": 0.6482982171799028,
+      "volume": 32283421.0,
+      "value": 200342618.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00706L",
+      "name": "期元大S&amp;P日圓正2(原名：元大S&amp;P日圓正2)",
+      "close": 18.72,
+      "change": 0.1,
+      "pct": 0.5370569280343718,
+      "volume": 3414621.0,
+      "value": 63815210.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00683L",
+      "name": "期元大美元指正2(原名：元大美元指數正2)",
+      "close": 23.48,
+      "change": -0.08,
+      "pct": -0.33955857385398985,
+      "volume": 52735.0,
+      "value": 1240551.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00633L",
+      "name": "富邦上証正2",
+      "close": 36.36,
+      "change": -1.2,
+      "pct": -3.1948881789137378,
+      "volume": 1927537.0,
+      "value": 70107672.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00637L",
+      "name": "元大滬深300正2",
+      "close": 15.2,
+      "change": -0.51,
+      "pct": -3.246339910884787,
+      "volume": 24276405.0,
+      "value": 368676325.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00655L",
+      "name": "國泰中國A50正2",
+      "close": 25.32,
+      "change": -0.92,
+      "pct": -3.5060975609756095,
+      "volume": 2140360.0,
+      "value": 54235327.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00753L",
+      "name": "中信中國50正2",
+      "close": 6.76,
+      "change": -0.31,
+      "pct": -4.384724186704385,
+      "volume": 24669708.0,
+      "value": 168991062.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00650L",
+      "name": "復華香港正2",
+      "close": 13.46,
+      "change": -0.63,
+      "pct": -4.471256210078069,
+      "volume": 3118027.0,
+      "value": 42470492.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00665L",
+      "name": "富邦恒生國企正2",
+      "close": 7.55,
+      "change": -0.37,
+      "pct": -4.671717171717172,
+      "volume": 11171398.0,
+      "value": 85397913.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00852L",
+      "name": "國泰美國道瓊正2",
+      "close": 29.77,
+      "change": -1.78,
+      "pct": -5.641838351822504,
+      "volume": 256649.0,
+      "value": 7670049.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00647L",
+      "name": "元大S&amp;P500正2",
+      "close": 120.8,
+      "change": -7.9,
+      "pct": -6.138306138306139,
+      "volume": 171368.0,
+      "value": 20845540.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00640L",
+      "name": "富邦日本正2",
+      "close": 86.85,
+      "change": -6.65,
+      "pct": -7.112299465240642,
+      "volume": 121858.0,
+      "value": 10744050.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00670L",
+      "name": "富邦NASDAQ正2",
+      "close": 152.95,
+      "change": -13.8,
+      "pct": -8.275862068965518,
+      "volume": 1813332.0,
+      "value": 279700160.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00708L",
+      "name": "期元大S&amp;P黃金正2(原名：元大S&amp;P黃金正2)",
+      "close": 50.35,
+      "change": -6.4,
+      "pct": -11.277533039647578,
+      "volume": 12045541.0,
+      "value": 620510282.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00631L",
+      "name": "元大台灣50正2",
+      "close": 21.24,
+      "change": -3.33,
+      "pct": -13.553113553113553,
+      "volume": 1300766332.0,
+      "value": 28747502962.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00685L",
       "name": "群益臺灣加權正2",
-      "close": 7.95,
-      "change": -0.77,
-      "pct": -8.830275229357799,
-      "volume": 996847468.0,
-      "value": 8163854020.0,
+      "close": 6.8,
+      "change": -1.15,
+      "pct": -14.465408805031446,
+      "volume": 1456338287.0,
+      "value": 10299796125.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00663L",
+      "name": "國泰臺灣加權正2",
+      "close": 59.3,
+      "change": -10.1,
+      "pct": -14.553314121037463,
+      "volume": 28437115.0,
+      "value": 1761354672.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00675L",
+      "name": "FB臺灣加權正2",
+      "close": 178.9,
+      "change": -30.75,
+      "pct": -14.66730264726926,
+      "volume": 8098010.0,
+      "value": 1504241013.0,
       "is_positive2": true,
       "is_inverse": false
     }
@@ -1105,271 +1098,271 @@
     {
       "code": "00631L",
       "name": "元大台灣50正2",
-      "close": 24.57,
-      "change": -2.27,
-      "pct": -8.4575260804769,
-      "volume": 865454264.0,
-      "value": 21986252409.0,
+      "close": 21.24,
+      "change": -3.33,
+      "pct": -13.553113553113553,
+      "volume": 1300766332.0,
+      "value": 28747502962.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00685L",
       "name": "群益臺灣加權正2",
-      "close": 7.95,
-      "change": -0.77,
-      "pct": -8.830275229357799,
-      "volume": 996847468.0,
-      "value": 8163854020.0,
+      "close": 6.8,
+      "change": -1.15,
+      "pct": -14.465408805031446,
+      "volume": 1456338287.0,
+      "value": 10299796125.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00663L",
       "name": "國泰臺灣加權正2",
-      "close": 69.4,
-      "change": -6.6,
-      "pct": -8.68421052631579,
-      "volume": 21893032.0,
-      "value": 1566831634.0,
+      "close": 59.3,
+      "change": -10.1,
+      "pct": -14.553314121037463,
+      "volume": 28437115.0,
+      "value": 1761354672.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00675L",
       "name": "FB臺灣加權正2",
-      "close": 209.65,
-      "change": -19.5,
-      "pct": -8.509709797076152,
-      "volume": 4144118.0,
-      "value": 893612987.0,
+      "close": 178.9,
+      "change": -30.75,
+      "pct": -14.66730264726926,
+      "volume": 8098010.0,
+      "value": 1504241013.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00708L",
       "name": "期元大S&amp;P黃金正2(原名：元大S&amp;P黃金正2)",
-      "close": 56.75,
-      "change": -1.85,
-      "pct": -3.1569965870307164,
-      "volume": 6549404.0,
-      "value": 371682839.0,
+      "close": 50.35,
+      "change": -6.4,
+      "pct": -11.277533039647578,
+      "volume": 12045541.0,
+      "value": 620510282.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00637L",
       "name": "元大滬深300正2",
-      "close": 15.71,
-      "change": -0.07,
-      "pct": -0.4435994930291508,
-      "volume": 23063309.0,
-      "value": 360068794.0,
+      "close": 15.2,
+      "change": -0.51,
+      "pct": -3.246339910884787,
+      "volume": 24276405.0,
+      "value": 368676325.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00670L",
       "name": "富邦NASDAQ正2",
-      "close": 166.75,
-      "change": 2.4,
-      "pct": 1.4602981442044418,
-      "volume": 1038857.0,
-      "value": 172885357.0,
+      "close": 152.95,
+      "change": -13.8,
+      "pct": -8.275862068965518,
+      "volume": 1813332.0,
+      "value": 279700160.0,
+      "is_positive2": true,
+      "is_inverse": false
+    },
+    {
+      "code": "00680L",
+      "name": "元大美債20正2",
+      "close": 6.21,
+      "change": 0.04,
+      "pct": 0.6482982171799028,
+      "volume": 32283421.0,
+      "value": 200342618.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00753L",
       "name": "中信中國50正2",
-      "close": 7.07,
-      "change": -0.38,
-      "pct": -5.100671140939597,
-      "volume": 17816533.0,
-      "value": 127420407.0,
-      "is_positive2": true,
-      "is_inverse": false
-    },
-    {
-      "code": "00665L",
-      "name": "富邦恒生國企正2",
-      "close": 7.92,
-      "change": -0.28,
-      "pct": -3.4146341463414642,
-      "volume": 10312650.0,
-      "value": 82365047.0,
+      "close": 6.76,
+      "change": -0.31,
+      "pct": -4.384724186704385,
+      "volume": 24669708.0,
+      "value": 168991062.0,
       "is_positive2": true,
       "is_inverse": false
     },
     {
       "code": "00715L",
       "name": "期街口布蘭特正2",
-      "close": 59.75,
-      "change": -0.85,
-      "pct": -1.4026402640264026,
-      "volume": 1230392.0,
-      "value": 73478516.0,
+      "close": 60.6,
+      "change": 0.85,
+      "pct": 1.4225941422594142,
+      "volume": 1952912.0,
+      "value": 118074491.0,
       "is_positive2": true,
       "is_inverse": false
     }
   ],
   "sectors_up": [
     {
-      "name": "建材營造類指數",
-      "pct": -0.08,
-      "close": 428.55
-    },
-    {
-      "name": "食品類指數",
-      "pct": -0.34,
-      "close": 1909.84
-    },
-    {
-      "name": "居家生活類指數",
-      "pct": -1.17,
-      "close": 96.45
-    },
-    {
-      "name": "汽車類指數",
-      "pct": -1.3,
-      "close": 273.89
-    },
-    {
-      "name": "紡織纖維類指數",
-      "pct": -1.55,
-      "close": 469.98
-    },
-    {
-      "name": "觀光餐旅類指數",
-      "pct": -1.58,
-      "close": 95.11
+      "name": "資訊服務類指數",
+      "pct": -3.16,
+      "close": 222.18
     },
     {
       "name": "貿易百貨類指數",
-      "pct": -1.69,
-      "close": 223.83
+      "pct": -3.47,
+      "close": 216.06
     },
     {
-      "name": "其他類指數",
-      "pct": -1.72,
-      "close": 255.34
+      "name": "居家生活類指數",
+      "pct": -3.86,
+      "close": 92.73
+    },
+    {
+      "name": "觀光餐旅類指數",
+      "pct": -4.11,
+      "close": 91.2
+    },
+    {
+      "name": "食品類指數",
+      "pct": -4.13,
+      "close": 1830.88
+    },
+    {
+      "name": "紡織纖維類指數",
+      "pct": -4.15,
+      "close": 450.49
+    },
+    {
+      "name": "油電燃氣類指數",
+      "pct": -4.27,
+      "close": 106.9
+    },
+    {
+      "name": "鋼鐵類指數",
+      "pct": -4.35,
+      "close": 107.84
     }
   ],
   "sectors_down": [
     {
       "name": "玻璃陶瓷類指數",
-      "pct": -9.62,
-      "close": 136.67
-    },
-    {
-      "name": "光電類指數",
-      "pct": -8.98,
-      "close": 54.25
-    },
-    {
-      "name": "塑膠類指數",
-      "pct": -8.77,
-      "close": 369.84
+      "pct": -9.69,
+      "close": 123.43
     },
     {
       "name": "電子零組件類指數",
-      "pct": -8.34,
-      "close": 561.17
+      "pct": -9.51,
+      "close": 507.82
+    },
+    {
+      "name": "塑膠類指數",
+      "pct": -9.09,
+      "close": 336.24
     },
     {
       "name": "塑膠化工類指數",
-      "pct": -7.01,
-      "close": 1058.33
+      "pct": -8.42,
+      "close": 969.25
     },
     {
-      "name": "綠能環保類指數",
-      "pct": -5.85,
-      "close": 90.41
+      "name": "電機機械類指數",
+      "pct": -8.35,
+      "close": 371.78
     },
     {
-      "name": "化學類指數",
-      "pct": -5.68,
-      "close": 156.06
+      "name": "光電類指數",
+      "pct": -8.2,
+      "close": 49.8
     },
     {
-      "name": "油電燃氣類指數",
-      "pct": -5.5,
-      "close": 111.67
+      "name": "生技醫療類指數",
+      "pct": -7.79,
+      "close": 77.42
+    },
+    {
+      "name": "化學生技醫療類指數",
+      "pct": -7.72,
+      "close": 132.94
     }
   ],
   "margin": {
     "financing_lots": {
-      "buy": 494619.0,
-      "sell": 625396.0,
-      "redeem": 13869.0,
-      "prev_balance": 9092265.0,
-      "today_balance": 8947619.0,
-      "change": -144646.0,
-      "change_pct": -1.590868721930124
+      "buy": 564938.0,
+      "sell": 1068300.0,
+      "redeem": 45506.0,
+      "prev_balance": 8947612.0,
+      "today_balance": 8398744.0,
+      "change": -548868.0,
+      "change_pct": -6.134240063158751
     },
     "short_lots": {
-      "buy": 25452.0,
-      "sell": 47343.0,
-      "redeem": 5616.0,
-      "prev_balance": 193544.0,
-      "today_balance": 209819.0,
-      "change": 16275.0,
-      "change_pct": 8.40894060265366
+      "buy": 31761.0,
+      "sell": 36002.0,
+      "redeem": 14269.0,
+      "prev_balance": 209819.0,
+      "today_balance": 199791.0,
+      "change": -10028.0,
+      "change_pct": -4.7793574461798025
     },
     "financing_amount_thousand": {
-      "buy": 21627629.0,
-      "sell": 41316390.0,
-      "redeem": 3969551.0,
-      "prev_balance": 508026642.0,
-      "today_balance": 484368330.0,
-      "change": -23658312.0,
-      "change_pct": -4.656903800726262
+      "buy": 20552809.0,
+      "sell": 60170406.0,
+      "redeem": 9523496.0,
+      "prev_balance": 484368360.0,
+      "today_balance": 435227267.0,
+      "change": -49141093.0,
+      "change_pct": -10.145396986706563
     }
   },
   "prediction": {
     "prob_up": 48,
     "label": "中性",
     "factors": [
-      "短中期趨勢（5日均線 vs 20日均線） 5日 40,686／20日 43,262（短線弱於中線）：短期均線在中期均線之上，代表近期走勢偏多、順勢上漲的機率較高；反之偏空。這是回測中表現最穩的一項。 (-4)",
-      "收盤 vs 20日均線 收盤 38,427（跌破月線 43,262）：站上月線代表中期趨勢仍在，跌破則偏弱。 (-2)",
-      "今日方向（順勢） -4.40%：回測顯示隔日有輕微延續今日方向的傾向（約 56%），所以只給 ±1 的小幅加減。 (-1)",
-      "上漲家數比例（僅參考） 10%：今天約 10% 的股票上漲。回測沒有顯示它對隔日方向有穩定預測力，所以不計分，只供你判斷市場情緒。 (+0)",
-      "融資餘額變化（僅參考） -1.59%：融資大增代表槓桿變多、波動風險上升；但歷史上對隔日漲跌沒有穩定關係，所以不計分，只供參考。 (+0)"
+      "短中期趨勢（5日均線 vs 20日均線） 5日 39,157／20日 42,720（短線弱於中線）：短期均線在中期均線之上，代表近期走勢偏多、順勢上漲的機率較高；反之偏空。這是回測中表現最穩的一項。 (-4)",
+      "收盤 vs 20日均線 收盤 36,033（跌破月線 42,720）：站上月線代表中期趨勢仍在，跌破則偏弱。 (-2)",
+      "今日方向（順勢） -6.23%：回測顯示隔日有輕微延續今日方向的傾向（約 56%），所以只給 ±1 的小幅加減。 (-1)",
+      "上漲家數比例（僅參考） 3%：今天約 3% 的股票上漲。回測沒有顯示它對隔日方向有穩定預測力，所以不計分，只供你判斷市場情緒。 (+0)",
+      "融資餘額變化（僅參考） -6.13%：融資大增代表槓桿變多、波動風險上升；但歷史上對隔日漲跌沒有穩定關係，所以不計分，只供參考。 (+0)"
     ],
     "base": 55.0,
     "steps": [
       {
         "key": "ma_cross",
         "name": "短中期趨勢（5日均線 vs 20日均線）",
-        "reading": "5日 40,686／20日 43,262（短線弱於中線）",
+        "reading": "5日 39,157／20日 42,720（短線弱於中線）",
         "delta": -4,
         "why": "短期均線在中期均線之上，代表近期走勢偏多、順勢上漲的機率較高；反之偏空。這是回測中表現最穩的一項。"
       },
       {
         "key": "vs_ma20",
         "name": "收盤 vs 20日均線",
-        "reading": "收盤 38,427（跌破月線 43,262）",
+        "reading": "收盤 36,033（跌破月線 42,720）",
         "delta": -2,
         "why": "站上月線代表中期趨勢仍在，跌破則偏弱。"
       },
       {
         "key": "momentum",
         "name": "今日方向（順勢）",
-        "reading": "-4.40%",
+        "reading": "-6.23%",
         "delta": -1,
         "why": "回測顯示隔日有輕微延續今日方向的傾向（約 56%），所以只給 ±1 的小幅加減。"
       },
       {
         "key": "breadth",
         "name": "上漲家數比例（僅參考）",
-        "reading": "10%",
+        "reading": "3%",
         "delta": 0,
-        "why": "今天約 10% 的股票上漲。回測沒有顯示它對隔日方向有穩定預測力，所以不計分，只供你判斷市場情緒。"
+        "why": "今天約 3% 的股票上漲。回測沒有顯示它對隔日方向有穩定預測力，所以不計分，只供你判斷市場情緒。"
       },
       {
         "key": "margin",
         "name": "融資餘額變化（僅參考）",
-        "reading": "-1.59%",
+        "reading": "-6.13%",
         "delta": 0,
         "why": "融資大增代表槓桿變多、波動風險上升；但歷史上對隔日漲跌沒有穩定關係，所以不計分，只供參考。"
       }
@@ -1378,13 +1371,13 @@
     "clamped": false,
     "model": "v2-trend",
     "inputs": {
-      "pct": -4.4,
-      "breadth": 9.9,
-      "financing_change_pct": -1.590868721930124
+      "pct": -6.23,
+      "breadth": 2.9,
+      "financing_change_pct": -6.134240063158751
     },
     "track": {
-      "n": 22,
-      "hits": 8
+      "n": 23,
+      "hits": 9
     }
   },
   "news": [],
