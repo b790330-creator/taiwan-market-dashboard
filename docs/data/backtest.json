@@ -1,67 +1,67 @@
 {
- "n_days": 214,
+ "n_days": 216,
  "first": "2025-12-30",
- "last": "2026-11-19",
+ "last": "2026-11-23",
  "rules": {
   "model_v2": {
-   "all": 0.584,
+   "all": 0.583,
    "last120": 0.558,
    "last60": 0.55,
-   "last20": 0.55
+   "last20": 0.6
   },
   "always_up": {
-   "all": 0.542,
-   "last120": 0.508,
-   "last60": 0.483,
-   "last20": 0.35
+   "all": 0.546,
+   "last120": 0.517,
+   "last60": 0.5,
+   "last20": 0.4
   },
   "continue_1d": {
-   "all": 0.561,
-   "last120": 0.525,
-   "last60": 0.55,
-   "last20": 0.55
+   "all": 0.56,
+   "last120": 0.533,
+   "last60": 0.567,
+   "last20": 0.6
   },
   "reverse_1d": {
-   "all": 0.439,
-   "last120": 0.475,
-   "last60": 0.45,
-   "last20": 0.45
+   "all": 0.44,
+   "last120": 0.467,
+   "last60": 0.433,
+   "last20": 0.4
   },
   "ret5_pos": {
-   "all": 0.537,
-   "last120": 0.458,
-   "last60": 0.483,
-   "last20": 0.5
+   "all": 0.532,
+   "last120": 0.45,
+   "last60": 0.467,
+   "last20": 0.45
   },
   "ret5_neg_reversal": {
-   "all": 0.463,
-   "last120": 0.542,
-   "last60": 0.517,
-   "last20": 0.5
+   "all": 0.468,
+   "last120": 0.55,
+   "last60": 0.533,
+   "last20": 0.55
   },
   "above_ma20": {
-   "all": 0.575,
-   "last120": 0.55,
-   "last60": 0.567,
-   "last20": 0.65
+   "all": 0.569,
+   "last120": 0.542,
+   "last60": 0.55,
+   "last20": 0.6
   },
   "above_ma60": {
-   "all": 0.551,
-   "last120": 0.533,
+   "all": 0.546,
+   "last120": 0.525,
    "last60": 0.533,
    "last20": 0.55
   },
   "ma5_above_ma20": {
-   "all": 0.603,
-   "last120": 0.575,
-   "last60": 0.55,
-   "last20": 0.65
+   "all": 0.597,
+   "last120": 0.567,
+   "last60": 0.533,
+   "last20": 0.6
   },
   "trend_follow_combo": {
-   "all": 0.579,
-   "last120": 0.542,
-   "last60": 0.567,
-   "last20": 0.65
+   "all": 0.574,
+   "last120": 0.533,
+   "last60": 0.55,
+   "last20": 0.6
   },
   "trend_follow_ma20_ret1": {
    "all": 0.565,
@@ -70,10 +70,10 @@
    "last20": 0.55
   },
   "oversold_bounce_only_in_uptrend": {
-   "all": 0.57,
-   "last120": 0.558,
+   "all": 0.565,
+   "last120": 0.55,
    "last60": 0.567,
-   "last20": 0.65
+   "last20": 0.6
   },
   "big_drop_reversal": {
    "all": 0.565,
@@ -82,8 +82,8 @@
    "last20": 0.55
   }
  },
- "base_up_rate": 0.542,
- "base_up_rate_last60": 0.483,
+ "base_up_rate": 0.546,
+ "base_up_rate_last60": 0.5,
  "buckets": {
   "above_ma20|ret5_neg|d1_down": {
    "n": 13,
@@ -102,12 +102,12 @@
    "up_rate": 0.654
   },
   "below_ma20|ret5_neg|d1_down": {
-   "n": 39,
-   "up_rate": 0.487
+   "n": 40,
+   "up_rate": 0.5
   },
   "below_ma20|ret5_neg|d1_up": {
-   "n": 18,
-   "up_rate": 0.5
+   "n": 19,
+   "up_rate": 0.526
   },
   "below_ma20|ret5_pos|d1_down": {
    "n": 8,
