@@ -1,89 +1,89 @@
 {
- "n_days": 216,
+ "n_days": 217,
  "first": "2025-12-30",
- "last": "2026-11-23",
+ "last": "2026-11-24",
  "rules": {
   "model_v2": {
-   "all": 0.583,
-   "last120": 0.558,
-   "last60": 0.55,
-   "last20": 0.6
+   "all": 0.581,
+   "last120": 0.55,
+   "last60": 0.533,
+   "last20": 0.55
   },
   "always_up": {
-   "all": 0.546,
-   "last120": 0.517,
-   "last60": 0.5,
-   "last20": 0.4
+   "all": 0.544,
+   "last120": 0.508,
+   "last60": 0.483,
+   "last20": 0.35
   },
   "continue_1d": {
-   "all": 0.56,
-   "last120": 0.533,
-   "last60": 0.567,
-   "last20": 0.6
+   "all": 0.558,
+   "last120": 0.525,
+   "last60": 0.55,
+   "last20": 0.55
   },
   "reverse_1d": {
-   "all": 0.44,
-   "last120": 0.467,
-   "last60": 0.433,
-   "last20": 0.4
+   "all": 0.442,
+   "last120": 0.475,
+   "last60": 0.45,
+   "last20": 0.45
   },
   "ret5_pos": {
-   "all": 0.532,
-   "last120": 0.45,
+   "all": 0.53,
+   "last120": 0.442,
    "last60": 0.467,
    "last20": 0.45
   },
   "ret5_neg_reversal": {
-   "all": 0.468,
-   "last120": 0.55,
+   "all": 0.47,
+   "last120": 0.558,
    "last60": 0.533,
    "last20": 0.55
   },
   "above_ma20": {
-   "all": 0.569,
+   "all": 0.571,
    "last120": 0.542,
    "last60": 0.55,
-   "last20": 0.6
+   "last20": 0.65
   },
   "above_ma60": {
-   "all": 0.546,
+   "all": 0.548,
    "last120": 0.525,
    "last60": 0.533,
-   "last20": 0.55
+   "last20": 0.6
   },
   "ma5_above_ma20": {
-   "all": 0.597,
+   "all": 0.599,
    "last120": 0.567,
    "last60": 0.533,
-   "last20": 0.6
+   "last20": 0.65
   },
   "trend_follow_combo": {
-   "all": 0.574,
+   "all": 0.576,
    "last120": 0.533,
    "last60": 0.55,
-   "last20": 0.6
+   "last20": 0.65
   },
   "trend_follow_ma20_ret1": {
-   "all": 0.565,
+   "all": 0.567,
    "last120": 0.517,
    "last60": 0.55,
-   "last20": 0.55
-  },
-  "oversold_bounce_only_in_uptrend": {
-   "all": 0.565,
-   "last120": 0.55,
-   "last60": 0.567,
    "last20": 0.6
   },
+  "oversold_bounce_only_in_uptrend": {
+   "all": 0.567,
+   "last120": 0.55,
+   "last60": 0.567,
+   "last20": 0.65
+  },
   "big_drop_reversal": {
-   "all": 0.565,
+   "all": 0.567,
    "last120": 0.517,
    "last60": 0.55,
-   "last20": 0.55
+   "last20": 0.6
   }
  },
- "base_up_rate": 0.546,
- "base_up_rate_last60": 0.5,
+ "base_up_rate": 0.544,
+ "base_up_rate_last60": 0.483,
  "buckets": {
   "above_ma20|ret5_neg|d1_down": {
    "n": 13,
@@ -114,7 +114,7 @@
    "up_rate": 0.375
   },
   "below_ma20|ret5_pos|d1_up": {
-   "n": 4,
+   "n": 5,
    "up_rate": 0.0
   }
  }
